@@ -3,6 +3,15 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary-color: #56b5f1
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--primary-color);
 }
 
 @theme inline {
@@ -23,4 +32,8 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+ol.custom-list {
+  list-style: none; /* remove default numbering */
 }
