@@ -37,3 +37,7 @@ body {
 ol.custom-list {
   list-style: none; /* remove default numbering */
 }
+
+button {
+  cursor: pointer;
+}

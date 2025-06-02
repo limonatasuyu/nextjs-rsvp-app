@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-interface IFormData {
+export interface IFormData {
   eventTitle: string;
   eventDescription: string;
   collectMaybeData: boolean;
@@ -10,17 +10,13 @@ interface IFormData {
   minimumAgeRequirement: number;
   showAttendingCount: boolean;
   showAttendees: boolean;
+  collectNote: boolean;
 }
 
 interface IFormDataErrors {
   eventTitle?: string;
   eventDescription?: string;
-  collectMaybeData?: string;
-  collectNotComingData?: string;
-  ageRestricted?: string;
   minimumAgeRequirement?: string;
-  showAttendingCount?: string;
-  showAttendees?: string;
 }
 
 export function CustomizeTemplate({
@@ -39,6 +35,7 @@ export function CustomizeTemplate({
     minimumAgeRequirement: 0,
     showAttendingCount: false,
     showAttendees: false,
+    collectNote: false,
   });
 
   const [formDataErrors, setFormDataErrors] = useState<IFormDataErrors>({});
@@ -64,7 +61,7 @@ export function CustomizeTemplate({
     const isFormValid = validateForm();
     if (!isFormValid) {
       console.error("Form validation failed:", formDataErrors);
-    };
+    }
     setCurrentStep(3);
   };
 
@@ -104,6 +101,17 @@ export function CustomizeTemplate({
           {formDataErrors.eventDescription && (
             <p className="text-red-500 text-sm mt-2">{formDataErrors.eventDescription}</p>
           )}
+          <div className="flex items-center gap-4 mt-8 w-fit">
+            <label className="block text-lg font-medium" htmlFor="collect-maybe-data">
+              Collect Note
+            </label>
+            <input
+              id="collect-note"
+              type="checkbox"
+              value={String(formData.collectNote)}
+              onChange={() => setFormData({ ...formData, collectNote: !formData.collectNote })}
+            />
+          </div>
           <div className="flex items-center gap-4 mt-8 w-fit">
             <label className="block text-lg font-medium" htmlFor="collect-maybe-data">
               Collect Maybe Data

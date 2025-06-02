@@ -1,7 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import { auth } from "@/../auth";
 
-export function Home() {
+export async function Home() {
+  const session = await auth()
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row items-center justify-center gap-12 px-6 py-16 bg-white">
       <div className="text-center md:text-left max-w-xl">
@@ -12,7 +15,7 @@ export function Home() {
           Set up a custom RSVP page for any event. Simple. Elegant. Fast.
         </p>
         <Link
-          href="/create"
+          href={session ? "/create" : "/login?redirectTo=/create"}
           style={{ appearance: "button" }}
           className="mt-6 bg-primary hover:bg-primary/80 text-white text-lg font-semibold px-6 py-3 rounded-2xl transition"
         >

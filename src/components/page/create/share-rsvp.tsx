@@ -1,9 +1,29 @@
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export function ShareRSVP({ templateId }: { templateId: number | null }) {
   if (!templateId) {
     return <div className="text-center text-red-500">No template selected.</div>;
   }
+
+  async function getToken() {
+    if (typeof window === "undefined") return null;
+    const token = await fetch("/api/get-rsvp-token");
+    if (token) return token;
+    return null;
+  }
+
+  const [url, setUrl] = useState<string | null>(null);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (typeof window === "undefined" || url) return;
+    (async () => {
+      const token = await getToken();
+      if (!token) return;
+      setUrl(`${window.location.origin}/rsvp?templateId=${templateId}&token=${token}`);
+    })();
+  }, [templateId, url, setUrl]);
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md mt-12">
@@ -12,12 +32,12 @@ export function ShareRSVP({ templateId }: { templateId: number | null }) {
       <input
         type="text"
         readOnly
-        value={`https://yourdomain.com/rsvp/${templateId}`}
+        value={url || "Generating link..."}
         className="w-full p-3 border border-gray-300 rounded-lg mb-4"
       />
       <button
         type="button"
-        onClick={() => navigator.clipboard.writeText(`https://yourdomain.com/rsvp/${templateId}`)}
+        onClick={() => navigator.clipboard.writeText(url || "")}
         className="cursor-pointer bg-primary hover:bg-primary/80 text-white px-4 py-2 rounded-lg transition"
       >
         Copy Link
