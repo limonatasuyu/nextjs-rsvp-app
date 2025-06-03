@@ -1,16 +1,15 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+import { useQueryString } from "@/hooks/use-query-string";
 
-export function Templates({
-  setChoosenTemplate,
-}: {
-  setChoosenTemplate: (templateId: number | null) => void;
-}) {
+export function Templates() {
   const [currentTemplate, setCurrentTemplate] = useState<number | null>(null);
   const previewTemplate = (templateId: number) => {
     setCurrentTemplate(templateId);
   };
+
+  const { addQueryParameter } = useQueryString();
 
   return (
     <>
@@ -64,7 +63,8 @@ export function Templates({
               <button
                 className="cursor-pointer hover:bg-primary/70 text-white bg-primary rounded-sm p-4"
                 onClick={() => {
-                  setChoosenTemplate(currentTemplate);
+                  addQueryParameter("templateId", String(currentTemplate));
+                  addQueryParameter("currentStep", "2");
                   setCurrentTemplate(null);
                 }}
                 type="button"

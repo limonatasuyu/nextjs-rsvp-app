@@ -3,18 +3,17 @@
 import Link from "next/link";
 import { useActionState, useEffect } from "react";
 import { signInAction } from "@/actions/auth";
+import { useSearchParams } from "next/navigation";
 
-export function LoginPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export function LoginPage() {
+  const searchParams = useSearchParams();
   const [state, formAction] = useActionState(signInAction, { error: "", success: false });
 
   const action = (payload: FormData) => {
     const payload_ = payload;
-    if (searchParams.redirectTo && typeof searchParams.redirectTo === "string") {
-      payload_.set("redirectTo", searchParams.redirectTo);
+    const redirectTo = searchParams.get("redirectTo");
+    if (redirectTo && typeof redirectTo === "string") {
+      payload_.set("redirectTo", redirectTo);
     } else {
       payload_.set("redirectTo", "/");
     }
@@ -22,8 +21,9 @@ export function LoginPage({
   };
 
   useEffect(() => {
+    const redirectTo = searchParams.get("redirectTo");
     if (state.success) {
-      window.location.href = searchParams.redirectTo ? (searchParams.redirectTo as string) : "/";
+      window.location.href = redirectTo ? redirectTo as string : "/";
     }
   }, [state]);
 

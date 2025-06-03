@@ -1,16 +1,31 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
-export function ShareRSVP({ templateId }: { templateId: number | null }) {
+export function ShareRSVP() {
+  const searchParams = useSearchParams();
+  const templateId = Number(searchParams.get("templateId"));
   if (!templateId) {
     return <div className="text-center text-red-500">No template selected.</div>;
   }
 
   async function getToken() {
-    if (typeof window === "undefined") return null;
-    const token = await fetch("/api/get-rsvp-token");
-    if (token) return token;
-    return null;
+    const data: { [key: string]: string } = {};
+    for (const [key, value] of searchParams.entries()) {
+      data[key] = value;
+    }
+    const response = await fetch("/api/rsvp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to get token");
+    }
+    const responseJson = await response.json();
+    return responseJson.token;
   }
 
   const [url, setUrl] = useState<string | null>(null);
@@ -21,7 +36,7 @@ export function ShareRSVP({ templateId }: { templateId: number | null }) {
     (async () => {
       const token = await getToken();
       if (!token) return;
-      setUrl(`${window.location.origin}/rsvp?templateId=${templateId}&token=${token}`);
+      setUrl(`${window.location.origin}/rsvp?&token=${token}`);
     })();
   }, [templateId, url, setUrl]);
 

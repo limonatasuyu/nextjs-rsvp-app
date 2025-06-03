@@ -12,6 +12,8 @@ export async function getUserByEmail(email: string) {
     },
   };
 
+  console.log("getParams:", JSON.stringify(getParams));
+
   try {
     const result = await ddb.send(new QueryCommand(getParams));
     return result?.Items?.[0];
@@ -47,6 +49,8 @@ export async function createUser(user: { email: string; hashedPassword: string; 
       pk: `USER#${id}`,
       sk: `USER#${id}`,
       id,
+      GSI1PK: `USER#${email}`,
+      GSI1SK: `USE#${email}`,
       email,
       emailVerified: false,
       name,

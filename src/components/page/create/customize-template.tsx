@@ -1,4 +1,6 @@
+import { useQueryString } from "@/hooks/use-query-string";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export interface IFormData {
@@ -19,13 +21,7 @@ interface IFormDataErrors {
   minimumAgeRequirement?: string;
 }
 
-export function CustomizeTemplate({
-  templateId,
-  setCurrentStep,
-}: {
-  templateId: number | null;
-  setCurrentStep: (step: number) => void;
-}) {
+export function CustomizeTemplate() {
   const [formData, setFormData] = useState<IFormData>({
     eventTitle: "",
     eventDescription: "",
@@ -38,6 +34,10 @@ export function CustomizeTemplate({
     collectNote: false,
   });
 
+  const searchParams = useSearchParams();
+  const templateId = Number(searchParams.get("templateId"));
+
+  const { addMultipleQueryParameters } = useQueryString();
   const [formDataErrors, setFormDataErrors] = useState<IFormDataErrors>({});
 
   const validateForm = () => {
@@ -62,7 +62,17 @@ export function CustomizeTemplate({
     if (!isFormValid) {
       console.error("Form validation failed:", formDataErrors);
     }
-    setCurrentStep(3);
+    const params: { name: string; value: string }[] = [];
+    for (const key in formData) {
+      if (formData[key as keyof IFormData] === false) {
+        params.push({ name: key, value: "false" });
+      } else {
+        params.push({ name: key, value: String(formData[key as keyof IFormData]) });
+      }
+    }
+    params.push({ name: "currentStep", value: "3" });
+    params.push({ name: "templateId", value: templateId.toString() });
+    addMultipleQueryParameters(params);
   };
 
   return (

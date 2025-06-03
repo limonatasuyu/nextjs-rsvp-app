@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useActionState } from "react";
 import { Session } from "next-auth";
 import { signOutAction } from "@/actions/auth";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 function X() {
   return (
@@ -48,7 +49,6 @@ function UserCircle() {
 
 export function LogoutButton() {
   const [state, formAction, isPending] = useActionState(signOutAction, null);
-
 
   return (
     <form action={formAction}>
@@ -98,6 +98,9 @@ export function AvatarDropdown({ session }: { session: Session }) {
             </button>
           </div>
           <div className="text-sm text-gray-700 space-y-1 mb-4">
+            <Link href="/dashboard">
+              <strong>Dashboard</strong>
+            </Link>
             <p>
               <strong>Name:</strong> {session.user?.name}
             </p>

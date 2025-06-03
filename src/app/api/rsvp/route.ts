@@ -1,43 +1,61 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { auth } from "@/../auth";
+import { getUserByEmail } from "@/lib/db/user-logic";
+import { createRSVPPage, getRSVPPageByToken } from "@/lib/db/rsvp-logic";
 
-interface CreateRSVPPAGE {
-  eventTitle: string;
-  eventDescription: string;
-  collectMaybeData: boolean;
-  collectNotComingData: boolean;
-  ageRestricted: boolean;
-  minimumAgeRequirement: number;
-  showAttendingCount: boolean;
-  showAttendees: boolean;
-  userId: string;
-  themeId: number;
-};
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const token = searchParams.get("token");
+  if (!token) {
+    return new Response(JSON.stringify({ error: "Invalid token" }), {
+      status: 400,
+    });
+  }
 
-interface GetRSVPPAGE {
-  eventTitle: string;
-  eventDescription: string;
-  collectMaybeData: boolean;
-  collectNotComingData: boolean;
-  ageRestricted: boolean;
-  minimumAgeRequirement: number;
-  showAttendingCount: boolean;
-  showAttendees: boolean;
-  userId: string;
-  themeId: number;
-  token: string;
+  const data = await getRSVPPageByToken(token);
+  if (!data) {
+    return new Response(JSON.stringify({ error: "Invalid token" }), {
+      status: 400,
+    });
+  }
+  return new Response(JSON.stringify(data), {
+    status: 200,
+  });
 }
 
 export async function POST(request: Request) {
-  const body: CreateRSVPPAGE = await request.json();
-  const client = new DynamoDBClient({});
-  const token = crypto.randomUUID();
+  try {
+    const session = await auth();
+    if (!session || !session.user || !session.user.email) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
+    }
 
-  const params = {
-    TableName: "rsvp-tokens",
-    Item: {
-      token: { S: token },
-      themeId: { N: "1" },
-      userId: { S: "1" },
-    },
-  };
+    const body = await request.json();
+    const user = await getUserByEmail(session.user.email);
+
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Something went wrong" }), {
+        status: 404,
+      });
+    }
+
+    const dto = { ...body, userId: user.id };
+    const { token } = await createRSVPPage(dto);
+
+    if (!token) {
+      return new Response(JSON.stringify({ error: "Something went wrong" }), {
+        status: 500,
+      });
+    }
+
+    return new Response(JSON.stringify({ token }), {
+      status: 200,
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ error: "Something went wrong" }), {
+      status: 500,
+    });
+  }
 }
