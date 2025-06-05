@@ -2,7 +2,7 @@
 
 import { EventData } from "./types";
 
-export function DeleteEventModal({ eventData }: { eventData: EventData }) {
+export function DeleteEventModal({ eventData, closeModal }: { eventData: EventData, closeModal: () => void }) {
   const link = "/rsvp?token=" + eventData.token;
   return (
     <div>
@@ -17,7 +17,7 @@ export function DeleteEventModal({ eventData }: { eventData: EventData }) {
         <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full mr-2">
           Delete
         </button>
-        <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full">
+        <button onClick={closeModal} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full">
           Cancel
         </button>
       </div>
