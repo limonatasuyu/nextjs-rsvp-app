@@ -1,13 +1,35 @@
-import { ICreateRSVPDTO } from "../dto/rsvp.dto";
-import { PutCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { ICreateRSVPDTO, IGetRSVPPageByTokenDTO, IGetRSVPPagesByUserDTO } from "../dto/rsvp.dto";
+import { PutCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "../db";
 import { randomBytes } from "crypto";
 
-export async function getRSVPPageByToken(token: string) {
+export async function getRSVPPagesByUser(dto: IGetRSVPPagesByUserDTO) {
+  const params = {
+    TableName: "rsvp-pages",
+    IndexName: "userId-index",
+    KeyConditionExpression: "#userId = :userIdValue",
+    ExpressionAttributeNames: {
+      "#userId": "userId",
+    },
+    ExpressionAttributeValues: {
+      ":userIdValue": dto.userId,
+    },
+  };
+
+  try {
+    const data = await ddb.send(new QueryCommand(params));
+    return data.Items;
+  } catch (err) {
+    console.error("Error querying GSI:", JSON.stringify(err));
+    throw err;
+  }
+}
+
+export async function getRSVPPageByToken(dto: IGetRSVPPageByTokenDTO) {
   const params = {
     TableName: "rsvp-pages",
     Key: {
-      token: token,
+      token: dto.token,
     },
   };
 

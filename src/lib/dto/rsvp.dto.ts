@@ -12,6 +12,10 @@ export interface ICreateRSVPDTO {
   userId: string;
 }
 
-export interface IGetRSVPDTO {
+export interface IGetRSVPPageByTokenDTO {
   token: string;
+}
+
+export interface IGetRSVPPagesByUserDTO {
+  userId: string;
 }

@@ -11,7 +11,8 @@ export async function GET(request: Request) {
     });
   }
 
-  const data = await getRSVPPageByToken(token);
+  const dto = { token };
+  const data = await getRSVPPageByToken(dto);
   if (!data) {
     return new Response(JSON.stringify({ error: "Invalid token" }), {
       status: 400,
@@ -38,7 +39,7 @@ export async function POST(request: Request) {
       return new Response(JSON.stringify({ error: "Something went wrong" }), {
         status: 404,
       });
-    }
+    } 
 
     const dto = { ...body, userId: user.id };
     const { token } = await createRSVPPage(dto);
