@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { EventData } from "../page/dashboard/types";
 
-export default function Template() {
+export default function Template({ data }: { data: EventData }) {
   const [note, setNote] = useState("");
 
   const handleSubmit = (response: string) => {
@@ -21,44 +22,46 @@ export default function Template() {
       }}
     >
       <div className="bg-white/80 backdrop-blur-md shadow-2xl rounded-3xl p-10 max-w-lg w-full space-y-6">
-        <h1 className="text-4xl font-bold text-center text-blue-800">Kristmıs Gathering</h1>
-        <p className="text-center text-gray-600 text-lg">
-          You're warmly invited to join us for a cozy winter celebration.
-        </p>
+        <h1 className="text-4xl font-bold text-center text-blue-800">{data.eventTitle}</h1>
+        {data.eventDescription && (
+          <p className="text-center text-gray-600 text-lg">{data.eventDescription}</p>
+        )}
 
         <div className="flex flex-col gap-4">
           <button
             className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition"
             onClick={() => handleSubmit("I'm Coming! ☃️")}
           >
-            I'm Coming! ☃️
+            I&apos;m Coming! ☃️
           </button>
-          <button
-            className="w-full py-3 bg-indigo-300 hover:bg-indigo-400 text-white font-semibold rounded-xl transition"
-            onClick={() => handleSubmit("Maybe 🌨️")}
-          >
-            Maybe 🌨️
-          </button>
-          <button
-            className="w-full py-3 bg-gray-400 hover:bg-gray-500 text-white font-semibold rounded-xl transition"
-            onClick={() => handleSubmit("Can't Make It ❌")}
-          >
-            Can't Make It ❌
-          </button>
+          {data.collectMaybeData && (
+            <button
+              className="w-full py-3 bg-indigo-300 hover:bg-indigo-400 text-white font-semibold rounded-xl transition"
+              onClick={() => handleSubmit("Maybe 🌨️")}
+            >
+              Maybe 🌨️
+            </button>
+          )}
+          {data.collectNotComingData && (
+            <button
+              className="w-full py-3 bg-gray-400 hover:bg-gray-500 text-white font-semibold rounded-xl transition"
+              onClick={() => handleSubmit("Can't Make It ❌")}
+            >
+              Can&apos;t Make It ❌
+            </button>
+          )}
         </div>
 
-        <input
-          type="text"
-          placeholder="Leave a message..."
-          className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-300 focus:outline-none"
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-        />
-
-        <p className="text-center text-xs text-gray-500 pt-4">
-          We hope to see you there! – The Kristmıs Team 🎁
-        </p>
+        {data.collectNote && (
+          <input
+            type="text"
+            placeholder="Leave a message..."
+            className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-300 focus:outline-none"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+          />
+        )}
       </div>
     </div>
   );
-};
+}

@@ -5,9 +5,7 @@ import { useSearchParams } from "next/navigation";
 export function ShareRSVP() {
   const searchParams = useSearchParams();
   const templateId = Number(searchParams.get("templateId"));
-  if (!templateId) {
-    return <div className="text-center text-red-500">No template selected.</div>;
-  }
+
 
   async function getToken() {
     const data: { [key: string]: string } = {};
@@ -40,6 +38,9 @@ export function ShareRSVP() {
     })();
   }, [templateId, url, setUrl]);
 
+  if (!templateId) {
+    return <div className="text-center text-red-500">No template selected.</div>;
+  }
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md mt-12">
       <h2 className="text-2xl font-bold mb-4">Share Your RSVP Page</h2>

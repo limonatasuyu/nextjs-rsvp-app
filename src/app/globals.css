@@ -3,7 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --primary-color: #56b5f1
+  --primary-color: #56b5f1;
 }
 
 @theme {
@@ -40,4 +40,8 @@ ol.custom-list {
 
 button {
   cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
 }

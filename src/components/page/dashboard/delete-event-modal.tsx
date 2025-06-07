@@ -1,8 +1,18 @@
 "use client";
 
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { EventData } from "./types";
+import { useDeleteEvent } from "@/hooks/use-delete-event";
 
-export function DeleteEventModal({ eventData, closeModal }: { eventData: EventData, closeModal: () => void }) {
+export function DeleteEventModal({
+  eventData,
+  closeModal,
+}: {
+  eventData: EventData;
+  closeModal: () => void;
+}) {
+  const { deleteEvent, loading, error } = useDeleteEvent({ token: eventData.token });
+
   const link = "/rsvp?token=" + eventData.token;
   return (
     <div>
@@ -14,13 +24,22 @@ export function DeleteEventModal({ eventData, closeModal }: { eventData: EventDa
         </a>
       </p>
       <div className="flex justify-between mt-6">
-        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full mr-2">
-          Delete
+        <button
+          disabled={loading}
+          onClick={deleteEvent}
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Delete {loading && <LoadingSpinner className="size-5 ml-2"/>}
         </button>
-        <button onClick={closeModal} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full">
+        <button
+          disabled={loading}
+          onClick={closeModal}
+          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+        >
           Cancel
         </button>
       </div>
+      {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
   );
 }

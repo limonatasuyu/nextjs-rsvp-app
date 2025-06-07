@@ -1,7 +1,40 @@
-import { ICreateRSVPDTO, IGetRSVPPageByTokenDTO, IGetRSVPPagesByUserDTO } from "../dto/rsvp.dto";
-import { PutCommand, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import {
+  ICreateRSVPDTO,
+  IGetRSVPPageByTokenDTO,
+  IGetRSVPPagesByUserDTO,
+  IDeleteRSVPPageDTO,
+} from "../dto/rsvp.dto";
+import { PutCommand, GetCommand, QueryCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "../db";
 import { randomBytes } from "crypto";
+
+export async function deleteRSVPPage(dto: IDeleteRSVPPageDTO) {
+  const page = await getRSVPPageByTokenWithUserId({ token: dto.token });
+  if (!page) {
+    throw new Error("Page not found");
+  }
+
+  console.log("page: ", page);
+  console.log("dto.userId: ", dto.userId);
+
+  if (page.userId !== dto.userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const params = {
+    TableName: "rsvp-pages",
+    Key: {
+      token: dto.token,
+    },
+  };
+
+  try {
+    await ddb.send(new DeleteCommand(params));
+  } catch (err) {
+    console.error("Error deleting item:", JSON.stringify(err));
+    throw err;
+  }
+}
 
 export async function getRSVPPagesByUser(dto: IGetRSVPPagesByUserDTO) {
   const params = {
@@ -22,6 +55,26 @@ export async function getRSVPPagesByUser(dto: IGetRSVPPagesByUserDTO) {
   } catch (err) {
     console.error("Error querying GSI:", JSON.stringify(err));
     throw err;
+  }
+}
+
+async function getRSVPPageByTokenWithUserId(dto: IGetRSVPPageByTokenDTO) {
+  const params = {
+    TableName: "rsvp-pages",
+    Key: {
+      token: dto.token,
+    },
+  };
+
+  try {
+    const Item = await ddb.send(new GetCommand(params));
+    if (!Item.Item) {
+      return null;
+    }
+    return Item.Item;
+  } catch (error) {
+    console.error("Error fetching RSVP page:", JSON.stringify(error));
+    throw error;
   }
 }
 

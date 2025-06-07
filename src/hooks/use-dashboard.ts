@@ -1,7 +1,8 @@
+import { EventData } from "@/components/page/dashboard/types";
 import { useEffect, useState } from "react";
 
 export function useDashboard() {
-  const [pages, setPages] = useState<any[]>([]);
+  const [pages, setPages] = useState<EventData[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchPages = async () => {

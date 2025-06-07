@@ -49,7 +49,7 @@ function UserCircle() {
 
 export function LogoutButton() {
   const [state, formAction, isPending] = useActionState(signOutAction, null);
-
+  console.log("state: ", state)
   return (
     <form action={formAction}>
       <button

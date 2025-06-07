@@ -32,11 +32,14 @@ export async function signInAction(prevState: { error: string; success: boolean 
       redirect: false,
     });
     return { success: true, error: "" };
-  } catch (error: any) {
-    if (error.name === "CredentialsSignin") {
+  } catch (error: unknown) {
+    if ((error as { name: string }).name === "CredentialsSignin") {
       return { error: "Invalid email or password", success: false };
     }
-    if (error.name === "Error" && error.message === "NEXT_REDIRECT") {
+    if (
+      (error as { name: string }).name === "Error" &&
+      (error as { message: string }).message === "NEXT_REDIRECT"
+    ) {
       return { error: "", success: true };
     }
     return { error: "Something went wrong. Please try again.", success: false };

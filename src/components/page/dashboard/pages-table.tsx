@@ -84,6 +84,25 @@ const EventDataGrid: React.FC<Props> = ({ data }) => {
               </td>
             </tr>
           ))}
+          {!data.length && (
+            <>
+              <tr>
+                <td colSpan={headers.length} className="text-center py-4">
+                  No events found.
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={headers.length} className="text-center py-4">
+                  <a
+                    href="/create"
+                    className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded"
+                  >
+                    ➕ Create Event
+                  </a>
+                </td>
+                </tr>
+            </>
+          )}
         </tbody>
       </table>
       <ModalRenderer />

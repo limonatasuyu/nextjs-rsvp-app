@@ -1,12 +1,8 @@
+import { EventData } from "@/components/page/dashboard/types";
 import { useEffect, useState } from "react";
 
-interface IRSVPPageData {
-  templateId: string;
-  // Add other properties as needed
-}
-
-export function useRSVPPageData({ token }: { token: string }) {
-  const [data, setData] = useState<IRSVPPageData | null>(null);
+export function useRSVPPageData({ token }: { token: string | null }) {
+  const [data, setData] = useState<EventData | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
 

@@ -19,3 +19,8 @@ export interface IGetRSVPPageByTokenDTO {
 export interface IGetRSVPPagesByUserDTO {
   userId: string;
 }
+
+export interface IDeleteRSVPPageDTO {
+  userId: string;
+  token: string;
+}
