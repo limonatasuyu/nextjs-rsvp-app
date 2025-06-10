@@ -5,22 +5,18 @@ import { useQueryString } from "@/hooks/use-query-string";
 
 export function Templates() {
   const [currentTemplate, setCurrentTemplate] = useState<number | null>(null);
-  const previewTemplate = (templateId: number) => {
-    setCurrentTemplate(templateId);
-  };
-
   const { addQueryParameter } = useQueryString();
 
   return (
     <>
       <div className="mt-16 grid grid-cols-4 gap-4">
-        {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+        {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
           <div
             key={i}
             className="flex flex-col items-center justify-center gap-2 cursor-pointer hover:shadow-lg transition-shadow duration-300"
-            onClick={() => previewTemplate(i)}
+            onClick={() => setCurrentTemplate(i)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") previewTemplate(i);
+              if (e.key === "Enter") setCurrentTemplate(i);
             }}
           >
             <div className="relative text-center text-gray-500 group">
@@ -42,7 +38,7 @@ export function Templates() {
           </div>
         ))}
       </div>
-      {currentTemplate !== null && (
+      {currentTemplate && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 bg-opacity-75">
           <div className="relative">
             <button

@@ -6,7 +6,6 @@ import {
 } from "../dto/rsvp.dto";
 import { PutCommand, GetCommand, QueryCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "../db";
-import { randomBytes } from "crypto";
 
 export async function deleteRSVPPage(dto: IDeleteRSVPPageDTO) {
   const page = await getRSVPPageByTokenWithUserId({ token: dto.token });
@@ -99,12 +98,10 @@ export async function getRSVPPageByToken(dto: IGetRSVPPageByTokenDTO) {
 }
 
 export async function createRSVPPage(dto: ICreateRSVPDTO) {
-  const token = randomBytes(32).toString("hex");
-  console.log("token: ", token);
   const params = {
     TableName: "rsvp-pages",
     Item: {
-      token: token,
+      token: dto.token,
       userId: dto.userId,
       eventTitle: dto.eventTitle,
       eventDescription: dto.eventDescription,
@@ -125,7 +122,7 @@ export async function createRSVPPage(dto: ICreateRSVPDTO) {
     if (response.$metadata.httpStatusCode !== 200) {
       throw new Error("Failed to create RSVP page");
     }
-    return { token };
+    return { token: dto.token };
   } catch (error) {
     console.error(JSON.stringify(error));
 

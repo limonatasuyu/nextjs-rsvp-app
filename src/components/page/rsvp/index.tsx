@@ -10,7 +10,7 @@ import Template5 from "@/components/templates/template-5";
 import Template6 from "@/components/templates/template-6";
 import Template7 from "@/components/templates/template-7";
 import Template8 from "@/components/templates/template-8";
-import { EventData } from "../dashboard/types";
+import { EventData } from "../events/types";
 import { JSX } from "react";
 
 type TemplateType = ({ data }: { data: EventData }) => JSX.Element;

@@ -18,7 +18,7 @@ function X() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="lucide lucide-x-icon lucide-x w-4 h-4 text-gray-500 hover:text-gray-700"
+      className="w-4 h-4 text-gray-500 hover:text-gray-700"
     >
       <path d="M18 6 6 18" />
       <path d="m6 6 12 12" />
@@ -26,7 +26,7 @@ function X() {
   );
 }
 
-function UserCircle() {
+function Avatar() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -47,19 +47,21 @@ function UserCircle() {
   );
 }
 
+
 export function LogoutButton() {
   const [state, formAction, isPending] = useActionState(signOutAction, null);
-  console.log("state: ", state)
+  console.log("state", state);
   return (
     <form action={formAction}>
       <button
+        disabled={isPending}
         type="submit"
         className={cn(
           "w-full py-2 px-4 bg-primary text-white text-sm font-medium rounded-md hover:bg-primary/90 transition",
           isPending && "opacity-50 cursor-not-allowed"
         )}
       >
-        {isPending ? "Signing Out.." : "Sign Out"}
+        {isPending ? "Signing Out..." : "Sign Out"}
       </button>
     </form>
   );
@@ -68,6 +70,9 @@ export function LogoutButton() {
 export function AvatarDropdown({ session }: { session: Session }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const name = session.user?.name ?? "Unknown";
+  const email = session.user?.email ?? "No email";
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -85,29 +90,31 @@ export function AvatarDropdown({ session }: { session: Session }) {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 text-primary hover:text-primary/80 transition"
       >
-        <UserCircle />
-        <span className="hidden sm:inline">Profile</span>
+        <Avatar />
+        <span className="hidden sm:inline text-md font-medium">Profile</span>
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-xl p-4 z-50 border">
+        <div className="absolute right-0 mt-2 w-72 bg-white shadow-xl rounded-xl p-4 z-50 border">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-800">Your Account</h2>
             <button onClick={() => setIsOpen(false)} aria-label="Close">
               <X />
             </button>
           </div>
+
           <div className="text-sm text-gray-700 space-y-1 mb-4">
-            <Link href="/dashboard">
-              <strong>Dashboard</strong>
+            <Link href="/events" className="block font-medium text-primary hover:underline">
+              Go to Dashboard
             </Link>
             <p>
-              <strong>Name:</strong> {session.user?.name}
+              <strong>Name:</strong> {name}
             </p>
             <p>
-              <strong>Email:</strong> {session.user?.email}
+              <strong>Email:</strong> {email}
             </p>
           </div>
+
           <LogoutButton />
         </div>
       )}

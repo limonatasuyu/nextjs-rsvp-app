@@ -12,10 +12,10 @@ export function Sidebar() {
       <ul className="flex flex-col gap-3">
         <li>
           <a
-            href="/dashboard"
+            href="/events"
             className={cn(
               "block px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-200 hover:text-black transition-colors",
-              pathname === "/dashboard" ? "bg-gray-400 text-black" : ""
+              pathname === "/events" ? "bg-gray-400 text-black" : ""
             )}
           >
             🗓️ Events

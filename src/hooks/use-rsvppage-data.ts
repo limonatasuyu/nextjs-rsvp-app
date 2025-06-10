@@ -1,4 +1,4 @@
-import { EventData } from "@/components/page/dashboard/types";
+import { EventData } from "@/components/page/events/types";
 import { useEffect, useState } from "react";
 
 export function useRSVPPageData({ token }: { token: string | null }) {

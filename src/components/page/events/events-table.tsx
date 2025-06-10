@@ -1,33 +1,32 @@
 import { useModal } from "@/hooks/use-modal";
 import React from "react";
 import { ViewEventDetailsModal } from "./view-event-details-modal";
-import { EditEventDetailsModal } from "./edit-event-details-modal";
+import { EditEventDetailsModal } from "./edit-event/edit-event-details-modal";
 import { EventData } from "./types";
 import { DeleteEventModal } from "./delete-event-modal";
 
-type Props = {
-  data: EventData[];
-};
+function isStringTrue(value: string): boolean {
+  return value.toLowerCase() === "true";
+}
 
-const EventDataGrid: React.FC<Props> = ({ data }) => {
+export function EventsTable({ data, loading }: { data: EventData[], loading: boolean }) {
   const headers = [
-    "Show Attending Count",
+    "Event Title",
     "Event Description",
+    "Age Restricted",
+    "Minimum Age Requirement",
+    "Show Attending Count",
     "Collect Not Coming Data",
     "Show Attendees",
-    "Template ID",
     "Collect Maybe Data",
-    "Minimum Age Requirement",
-    "Event Title",
     "Collect Note",
-    "Age Restricted",
     "Attendee Count",
     "Actions",
   ];
   const { closeModal, openModal, ModalRenderer } = useModal();
 
   const handleEdit = (row: EventData) => {
-    openModal(<EditEventDetailsModal eventData={row} />, "Edit Event Details");
+    openModal(<EditEventDetailsModal eventData={row} closeModal={closeModal} />, "Edit Event Details");
   };
   const handleView = (row: EventData) => {
     openModal(<ViewEventDetailsModal eventData={row} />, "View Event Details");
@@ -51,18 +50,17 @@ const EventDataGrid: React.FC<Props> = ({ data }) => {
         <tbody className="text-sm text-gray-800">
           {data.map((row, rowIndex) => (
             <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-              <td className="px-4 py-2 border-b">{row.showAttendingCount ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{row.eventDescription}</td>
-              <td className="px-4 py-2 border-b">{row.collectNotComingData ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{row.showAttendees ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{row.templateId}</td>
-              <td className="px-4 py-2 border-b">{row.collectMaybeData ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{row.minimumAgeRequirement}</td>
               <td className="px-4 py-2 border-b">{row.eventTitle}</td>
-              <td className="px-4 py-2 border-b">{row.collectNote ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{row.ageRestricted ? "Yes" : "No"}</td>
+              <td className="px-4 py-2 border-b">{row.eventDescription}</td>
+              <td className="px-4 py-2 border-b">{isStringTrue(row.ageRestricted) ? "Yes" : "No"}</td>
+              <td className="px-4 py-2 border-b">{row.minimumAgeRequirement}</td>
+              <td className="px-4 py-2 border-b">{isStringTrue(row.showAttendingCount) ? "Yes" : "No"}</td>
+              <td className="px-4 py-2 border-b">{isStringTrue(row.collectNotComingData) ? "Yes" : "No"}</td>
+              <td className="px-4 py-2 border-b">{isStringTrue(row.showAttendees) ? "Yes" : "No"}</td>
+              <td className="px-4 py-2 border-b">{isStringTrue(row.collectMaybeData) ? "Yes" : "No"}</td>
+              <td className="px-4 py-2 border-b">{isStringTrue(row.collectNote) ? "Yes" : "No"}</td>
               <td className="px-4 py-2 border-b">{row.attendeeCount ?? 0}</td>
-              <td className="px-4 py-2 border-b space-x-2">
+              <td className="px-4 py-2 border-b flex justify-start gap-2">
                 <button
                   onClick={() => handleEdit(row)}
                   className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded"
@@ -84,7 +82,14 @@ const EventDataGrid: React.FC<Props> = ({ data }) => {
               </td>
             </tr>
           ))}
-          {!data.length && (
+          {loading && (
+            <tr>
+              <td colSpan={headers.length} className="text-center py-4">
+                Loading events...
+              </td>
+            </tr>
+          )}
+          {!data.length && !loading && (
             <>
               <tr>
                 <td colSpan={headers.length} className="text-center py-4">
@@ -100,7 +105,7 @@ const EventDataGrid: React.FC<Props> = ({ data }) => {
                     ➕ Create Event
                   </a>
                 </td>
-                </tr>
+              </tr>
             </>
           )}
         </tbody>
@@ -108,6 +113,4 @@ const EventDataGrid: React.FC<Props> = ({ data }) => {
       <ModalRenderer />
     </div>
   );
-};
-
-export default EventDataGrid;
+}

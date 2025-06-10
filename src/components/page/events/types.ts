@@ -1,15 +1,15 @@
 
 export type EventData = {
-  showAttendingCount: boolean;
+  showAttendingCount: string;
   token: string;
   eventDescription: string;
-  collectNotComingData: boolean;
-  showAttendees: boolean;
+  collectNotComingData: string;
+  showAttendees: string;
   templateId: number;
-  collectMaybeData: boolean;
+  collectMaybeData: string;
   minimumAgeRequirement: number;
   eventTitle: string;
-  collectNote: boolean;
-  ageRestricted: boolean;
+  collectNote: string;
+  ageRestricted: string;
   attendeeCount?: number;
 };

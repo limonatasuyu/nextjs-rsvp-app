@@ -1,0 +1,138 @@
+import { useModal } from "@/hooks/use-modal";
+import Image from "next/image";
+import { Dispatch, SetStateAction, useState } from "react";
+
+const PreviewTemplate = ({
+  setCurrentTemplate,
+  templateId,
+  closeModal,
+}: {
+  setCurrentTemplate: Dispatch<SetStateAction<number | null>>;
+  closeModal: () => void;
+  templateId: number;
+}) => {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 bg-opacity-75">
+      <div className="relative">
+        <button
+          className="cursor-pointer absolute top-0 right-0 m-4 text-black bg-white rounded-full px-[10px] pt-1 text-2xl"
+          onClick={() => closeModal()}
+          type="button"
+        >
+          &times;
+        </button>
+        <Image
+          src={`/themes/screenshots/template-${templateId}.png`}
+          alt="Preview"
+          width={1500}
+          height={1500}
+          className="max-w-full max-h-full"
+        />
+        <div className="flex w-full items-center justify-center gap-12 mt-4">
+          <button
+            className="cursor-pointer hover:bg-primary/70 text-white bg-primary rounded-sm p-4"
+            onClick={() => {
+              setCurrentTemplate(templateId);
+            }}
+            type="button"
+          >
+            Choose
+          </button>
+          <button
+            className="cursor-pointer hover:bg-black/70 text-white bg-black rounded-sm p-4"
+            onClick={() => closeModal()}
+            type="button"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export function ChooseTemplate({
+  currentTemplateId,
+  closeModal,
+  onChangeTemplate,
+}: {
+  currentTemplateId: number;
+  closeModal: () => void;
+  onChangeTemplate?: (templateId: number) => void;
+}) {
+  const [choosenTemplate, setChoosenTemplate] = useState<number | null>(null);
+  const { openModal, ModalRenderer, closeModal: closeInnerModal } = useModal();
+  const handleTemplateChange = () => {
+    if (!choosenTemplate) return;
+    onChangeTemplate?.(choosenTemplate);
+  };
+  return (
+    <>
+      <ModalRenderer />
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 bg-opacity-75">
+        <div className="rounded-lg bg-white w-full max-w-7xl">
+          <div className="flex w-full max-w-7xl items-center justify-end p-4">
+            <button onClick={closeModal}>X</button>
+          </div>
+          <div className="relative grid grid-cols-4 gap-16 p-6 w-full max-w-7xl">
+            {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+              <div
+                key={i}
+                className="p-3 flex flex-col items-center justify-center gap-2 cursor-pointer hover:shadow-lg transition-shadow duration-300"
+                onClick={() =>
+                  openModal(
+                    <PreviewTemplate
+                      setCurrentTemplate={setChoosenTemplate}
+                      templateId={i}
+                      closeModal={closeInnerModal}
+                    />
+                  )
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter")
+                    <PreviewTemplate
+                      setCurrentTemplate={setChoosenTemplate}
+                      templateId={i}
+                      closeModal={closeInnerModal}
+                    />;
+                }}
+              >
+                {i === currentTemplateId && (
+                  <div className="absolute top-0 left-0 w-full h-full bg-primary/50 rounded-lg"></div>
+                )}
+                <div className="relative text-center text-gray-500 group">
+                  <Image
+                    src={`/themes/screenshots/template-${i}.png`}
+                    className="w-full h-40 bg-gray-200 rounded-lg group-hover:opacity-20 transition-opacity duration-300"
+                    width={400}
+                    height={200}
+                    alt={`Template ${i}`}
+                  />
+                  <span className="hidden group-hover:inline-block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-bold text-lg">
+                    Preview
+                  </span>
+                </div>
+                <div className="text-center">
+                  <h2 className="text-lg font-bold">Template {i + 1}</h2>
+                  <p className="text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center justify-start w-full max-w-7xl p-4">
+            <button
+              className="cursor-pointer hover:bg-primary/70 text-white bg-primary rounded-sm p-4"
+              onClick={() => {
+                handleTemplateChange();
+                closeModal();
+              }}
+              type="button"
+            >
+              Confirm Choosen Template
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

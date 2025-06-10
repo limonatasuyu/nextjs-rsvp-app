@@ -6,7 +6,6 @@ export function ShareRSVP() {
   const searchParams = useSearchParams();
   const templateId = Number(searchParams.get("templateId"));
 
-
   async function getToken() {
     const data: { [key: string]: string } = {};
     for (const [key, value] of searchParams.entries()) {
@@ -38,7 +37,7 @@ export function ShareRSVP() {
     })();
   }, [templateId, url, setUrl]);
 
-  if (!templateId) {
+  if (!templateId && templateId !== 0) {
     return <div className="text-center text-red-500">No template selected.</div>;
   }
   return (
@@ -58,6 +57,9 @@ export function ShareRSVP() {
       >
         Copy Link
       </button>
+      <a href="/events" className="ml-4 text-sm text-gray-500 mt-4">
+        Go to dashboard
+      </a>
       <div className="w-full flex items-center justify-center mt-8">
         <Image
           src={`/themes/screenshots/template-${templateId}.png`}

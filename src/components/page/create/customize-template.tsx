@@ -1,4 +1,5 @@
 import { useQueryString } from "@/hooks/use-query-string";
+import { randomBytes } from "crypto";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -62,6 +63,7 @@ export function CustomizeTemplate() {
     if (!isFormValid) {
       console.error("Form validation failed:", formDataErrors);
     }
+
     const params: { name: string; value: string }[] = [];
     for (const key in formData) {
       if (formData[key as keyof IFormData] === false) {
@@ -72,6 +74,8 @@ export function CustomizeTemplate() {
     }
     params.push({ name: "currentStep", value: "3" });
     params.push({ name: "templateId", value: templateId.toString() });
+    const token = randomBytes(32).toString("hex");
+    params.push({ name: "token", value: token });
     addMultipleQueryParameters(params);
   };
 

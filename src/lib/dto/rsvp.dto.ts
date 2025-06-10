@@ -1,4 +1,5 @@
 export interface ICreateRSVPDTO {
+  token: string;
   eventTitle: string;
   eventDescription: string;
   collectMaybeData: boolean;

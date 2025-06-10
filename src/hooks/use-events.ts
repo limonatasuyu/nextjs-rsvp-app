@@ -1,20 +1,20 @@
-import { EventData } from "@/components/page/dashboard/types";
+import { EventData } from "@/components/page/events/types";
 import { useEffect, useState } from "react";
 
-export function useDashboard() {
-  const [pages, setPages] = useState<EventData[]>([]);
+export function useEvents() {
+  const [events, setEvents] = useState<EventData[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchPages = async () => {
       const response = await fetch("/api/rsvp/pages");
       const data = await response.json();
       if (!data) return;
-      setPages(data);
+      setEvents(data);
       setLoading(false);
     };
 
     fetchPages();
   }, []);
 
-  return { pages, loading };
+  return { events, loading };
 }

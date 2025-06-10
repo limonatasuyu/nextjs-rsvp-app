@@ -1,5 +1,5 @@
 import React from "react";
-import { EventData } from "../page/dashboard/types";
+import { EventData } from "../page/events/types";
 
 export default function Template({ data }: { data: EventData }) {
   return (
