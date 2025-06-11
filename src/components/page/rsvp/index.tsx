@@ -1,6 +1,6 @@
 "use client";
 
-import { useRSVPPageData } from "@/hooks/use-rsvppage-data";
+import { useRSVPPage } from "@/hooks/use-rsvp-page";
 import { useSearchParams } from "next/navigation";
 import Template1 from "@/components/templates/template-1";
 import Template2 from "@/components/templates/template-2";
@@ -19,7 +19,7 @@ export function RSVPPage() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  const { data, isLoading } = useRSVPPageData({ token });
+  const { data, isLoading } = useRSVPPage({ token });
 
   const templates: { [key: number]: null | TemplateType } = {
     0: null,
@@ -34,7 +34,7 @@ export function RSVPPage() {
   };
 
   const templateId = data?.templateId ? Number(data?.templateId) : 0;
-  const Template = templates[templateId as keyof typeof templates] ?? null;
+  const Template = templates[templateId + 1 as keyof typeof templates] ?? null;
   if (!token) {
     return <div>Invalid token</div>;
   }

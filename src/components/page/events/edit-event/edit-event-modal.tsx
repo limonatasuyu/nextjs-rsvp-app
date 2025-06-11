@@ -5,16 +5,27 @@ import { useModal } from "@/hooks/use-modal";
 import Image from "next/image";
 import { TemplatePreview } from "./template-preview";
 import { ChooseTemplate } from "./choose-template";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
-export function EditEventDetailsModal({
+export function EditEventModal({
   eventData,
   closeModal,
+  updateEvent,
+  updateLoading,
 }: {
   eventData: EventData;
   closeModal: () => void;
+  updateEvent: (data: EventData) => Promise<void>;
+  updateLoading: boolean;
 }) {
+  const [formData, setFormData] = useState<EventData>(eventData);
   const { openModal, ModalRenderer, closeModal: closeInnerModal } = useModal();
+  console.log("formData", formData);
+  const changeFormData = (key: string, value: string | number | boolean) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  };
+
   const renderField = useCallback(
     (field: {
       key: string;
@@ -22,7 +33,7 @@ export function EditEventDetailsModal({
       type: string;
       options?: { id: string; name: string; image: string }[];
     }) => {
-      const value = eventData[field.key as keyof EventData];
+      const value = formData[field.key as keyof EventData];
 
       if (field.key === "token") {
         return (
@@ -49,6 +60,7 @@ export function EditEventDetailsModal({
           <input
             id={field.key}
             type={field.type}
+            onChange={(e) => changeFormData(field.key, e.target.value)}
             defaultValue={value as string | number}
             className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           />
@@ -59,6 +71,7 @@ export function EditEventDetailsModal({
         return (
           <textarea
             id={field.key}
+            onChange={(e) => changeFormData(field.key, e.target.value)}
             defaultValue={value as string}
             className="w-full border border-gray-300 rounded-xl px-4 py-2 min-h-[80px] focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
           />
@@ -66,7 +79,9 @@ export function EditEventDetailsModal({
       }
 
       if (field.type === "switch") {
-        return <Switch defaultChecked={!!value} id={field.key} />;
+        return (
+          <Switch onClick={() => changeFormData(field.key, !value)} value={value as string} id={field.key} />
+        );
       }
 
       if (field.name === "Template") {
@@ -84,7 +99,13 @@ export function EditEventDetailsModal({
             />
             <button
               onClick={() =>
-                openModal(<ChooseTemplate currentTemplateId={value as number} closeModal={closeInnerModal} />)
+                openModal(
+                  <ChooseTemplate
+                    onChangeTemplate={(newValue) => changeFormData("templateId", String(newValue))}
+                    currentTemplateId={value as number}
+                    closeModal={closeInnerModal}
+                  />
+                )
               }
               className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition"
             >
@@ -96,8 +117,63 @@ export function EditEventDetailsModal({
 
       return null;
     },
-    [eventData, openModal, closeInnerModal]
+    [formData, openModal, closeInnerModal]
   );
+
+  const handleCloseModal = () => {
+    openModal(
+      <div>
+        <h2 className="text-2xl font-bold mb-4">Confirmation</h2>
+        <p>Are you sure you want to close the modal? Any unsaved changes will be lost.</p>
+        <div className="mt-4 flex justify-end space-x-2">
+          <button
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+            onClick={() => {
+              closeInnerModal();
+              closeModal();
+            }}
+          >
+            Close
+          </button>
+          <button
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg transition"
+            onClick={closeInnerModal}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  const handleSaveChanges = () => {
+    openModal(
+      <div>
+        <h2 className="text-2xl font-bold mb-4">Confirmation</h2>
+        <p>Are you sure to change event details?</p>
+        <div className="mt-4 flex justify-end space-x-2">
+          <button
+            disabled={updateLoading}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition"
+            onClick={() => {
+              updateEvent(formData).then(() => {
+                closeInnerModal();
+                closeModal();
+              });
+            }}
+          >
+            Save {updateLoading && <LoadingSpinner className="size-5 ml-2" />}
+          </button>
+          <button
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg transition"
+            onClick={closeInnerModal}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -116,16 +192,13 @@ export function EditEventDetailsModal({
         <div className="mt-6 flex justify-start">
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition"
-            onClick={() => {
-              // Handle save logic here
-              console.log("Event data saved:", eventData);
-            }}
+            onClick={handleSaveChanges}
           >
             Save Changes
           </button>
           <button
             className="ml-4 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg transition"
-            onClick={closeModal}
+            onClick={handleCloseModal}
           >
             Cancel
           </button>

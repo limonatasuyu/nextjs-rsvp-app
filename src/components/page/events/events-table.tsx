@@ -1,15 +1,21 @@
 import { useModal } from "@/hooks/use-modal";
 import React from "react";
-import { ViewEventDetailsModal } from "./view-event-details-modal";
-import { EditEventDetailsModal } from "./edit-event/edit-event-details-modal";
+import { ViewEventModal } from "./view-event/view-event-modal";
+import { EditEventModal } from "./edit-event/edit-event-modal";
 import { EventData } from "./types";
 import { DeleteEventModal } from "./delete-event-modal";
+import Link from "next/link";
+import { useUpdateEvent } from "./hooks/use-update-event";
 
-function isStringTrue(value: string): boolean {
-  return value.toLowerCase() === "true";
-}
-
-export function EventsTable({ data, loading }: { data: EventData[], loading: boolean }) {
+export function EventsTable({
+  data,
+  loading,
+  refetchData,
+}: {
+  data: EventData[];
+  loading: boolean;
+  refetchData: () => void;
+}) {
   const headers = [
     "Event Title",
     "Event Description",
@@ -24,15 +30,27 @@ export function EventsTable({ data, loading }: { data: EventData[], loading: boo
     "Actions",
   ];
   const { closeModal, openModal, ModalRenderer } = useModal();
+  const { updateEvent, loading: updateLoading } = useUpdateEvent({ refetch: refetchData });
 
   const handleEdit = (row: EventData) => {
-    openModal(<EditEventDetailsModal eventData={row} closeModal={closeModal} />, "Edit Event Details");
+    openModal(
+      <EditEventModal
+        eventData={row}
+        closeModal={closeModal}
+        updateEvent={updateEvent}
+        updateLoading={updateLoading}
+      />,
+      "Edit Event Details"
+    );
   };
   const handleView = (row: EventData) => {
-    openModal(<ViewEventDetailsModal eventData={row} />, "View Event Details");
+    openModal(<ViewEventModal eventData={row} />, "View Event Details");
   };
   const handleDelete = (row: EventData) => {
-    openModal(<DeleteEventModal eventData={row} closeModal={closeModal} />, "Delete Event");
+    openModal(
+      <DeleteEventModal eventData={row} closeModal={closeModal} refetchData={refetchData} />,
+      "Delete Event"
+    );
   };
 
   return (
@@ -52,13 +70,13 @@ export function EventsTable({ data, loading }: { data: EventData[], loading: boo
             <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"}>
               <td className="px-4 py-2 border-b">{row.eventTitle}</td>
               <td className="px-4 py-2 border-b">{row.eventDescription}</td>
-              <td className="px-4 py-2 border-b">{isStringTrue(row.ageRestricted) ? "Yes" : "No"}</td>
+              <td className="px-4 py-2 border-b">{row.ageRestricted ? "Yes" : "No"}</td>
               <td className="px-4 py-2 border-b">{row.minimumAgeRequirement}</td>
-              <td className="px-4 py-2 border-b">{isStringTrue(row.showAttendingCount) ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{isStringTrue(row.collectNotComingData) ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{isStringTrue(row.showAttendees) ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{isStringTrue(row.collectMaybeData) ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{isStringTrue(row.collectNote) ? "Yes" : "No"}</td>
+              <td className="px-4 py-2 border-b">{row.showAttendingCount ? "Yes" : "No"}</td>
+              <td className="px-4 py-2 border-b">{row.collectNotComingData ? "Yes" : "No"}</td>
+              <td className="px-4 py-2 border-b">{row.showAttendees ? "Yes" : "No"}</td>
+              <td className="px-4 py-2 border-b">{row.collectMaybeData ? "Yes" : "No"}</td>
+              <td className="px-4 py-2 border-b">{row.collectNote ? "Yes" : "No"}</td>
               <td className="px-4 py-2 border-b">{row.attendeeCount ?? 0}</td>
               <td className="px-4 py-2 border-b flex justify-start gap-2">
                 <button
@@ -98,12 +116,12 @@ export function EventsTable({ data, loading }: { data: EventData[], loading: boo
               </tr>
               <tr>
                 <td colSpan={headers.length} className="text-center py-4">
-                  <a
+                  <Link
                     href="/create"
                     className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded"
                   >
                     ➕ Create Event
-                  </a>
+                  </Link>
                 </td>
               </tr>
             </>

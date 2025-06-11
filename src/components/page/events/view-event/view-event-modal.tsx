@@ -1,7 +1,7 @@
-import { EventData } from "./types";
-import { modalFields } from "./mock";
+import { EventData } from "../types";
+import { modalFields } from "../mock";
 
-export function ViewEventDetailsModal({ eventData }: { eventData: EventData }) {
+export function ViewEventModal({ eventData }: { eventData: EventData }) {
 
 
   return (

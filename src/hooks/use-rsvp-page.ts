@@ -1,7 +1,7 @@
 import { EventData } from "@/components/page/events/types";
 import { useEffect, useState } from "react";
 
-export function useRSVPPageData({ token }: { token: string | null }) {
+export function useRSVPPage({ token }: { token: string | null }) {
   const [data, setData] = useState<EventData | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -9,7 +9,7 @@ export function useRSVPPageData({ token }: { token: string | null }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/rsvp?token=${token}`);
+        const response = await fetch(`/api/events?token=${token}`);
         const data = await response.json();
         setData(data);
       } catch (error) {

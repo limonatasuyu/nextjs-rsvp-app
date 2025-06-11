@@ -1,7 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { usePathname } from 'next/navigation';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -11,7 +12,7 @@ export function Sidebar() {
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Menu</h2>
       <ul className="flex flex-col gap-3">
         <li>
-          <a
+          <Link
             href="/events"
             className={cn(
               "block px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-200 hover:text-black transition-colors",
@@ -19,10 +20,10 @@ export function Sidebar() {
             )}
           >
             🗓️ Events
-          </a>
+          </Link>
         </li>
         <li>
-          <a
+          <Link
             href="/create"
             className={cn(
               "block px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-200 hover:text-black transition-colors",
@@ -30,10 +31,10 @@ export function Sidebar() {
             )}
           >
             ➕ Create Event
-          </a>
+          </Link>
         </li>
         <li>
-          <a
+          <Link
             href="/settings"
             className={cn(
               "block px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-200 hover:text-black transition-colors",
@@ -41,7 +42,7 @@ export function Sidebar() {
             )}
           >
             ⚙️ Settings
-          </a>
+          </Link>
         </li>
       </ul>
     </div>

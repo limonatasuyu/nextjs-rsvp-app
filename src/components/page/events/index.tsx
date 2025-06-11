@@ -1,10 +1,10 @@
 "use client";
 
-import { useEvents } from "@/hooks/use-events";
+import { useEvents } from "@/components/page/events/hooks/use-events";
 import { EventsTable } from "./events-table";
 
 export function EventsPage() {
-  const { events, loading } = useEvents();
+  const { events, loading, refetch } = useEvents();
 
   return (
     <div className="p-6 md:p-10 space-y-6">
@@ -15,7 +15,7 @@ export function EventsPage() {
 
       <div>
         <h2 className="text-xl font-semibold text-gray-800 mb-2">Events Table</h2>
-        <EventsTable data={events} loading={loading} />
+        <EventsTable data={events} loading={loading} refetchData={refetch} />
       </div>
     </div>
   );

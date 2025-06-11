@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export function ShareRSVP() {
   const searchParams = useSearchParams();
@@ -11,7 +12,7 @@ export function ShareRSVP() {
     for (const [key, value] of searchParams.entries()) {
       data[key] = value;
     }
-    const response = await fetch("/api/rsvp", {
+    const response = await fetch("/api/events", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,9 +58,9 @@ export function ShareRSVP() {
       >
         Copy Link
       </button>
-      <a href="/events" className="ml-4 text-sm text-gray-500 mt-4">
+      <Link href="/events" className="ml-4 text-sm text-gray-500 mt-4">
         Go to dashboard
-      </a>
+      </Link>
       <div className="w-full flex items-center justify-center mt-8">
         <Image
           src={`/themes/screenshots/template-${templateId}.png`}

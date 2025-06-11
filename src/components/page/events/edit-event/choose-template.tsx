@@ -33,6 +33,7 @@ const PreviewTemplate = ({
             className="cursor-pointer hover:bg-primary/70 text-white bg-primary rounded-sm p-4"
             onClick={() => {
               setCurrentTemplate(templateId);
+              closeModal();
             }}
             type="button"
           >
@@ -60,11 +61,12 @@ export function ChooseTemplate({
   closeModal: () => void;
   onChangeTemplate?: (templateId: number) => void;
 }) {
-  const [choosenTemplate, setChoosenTemplate] = useState<number | null>(null);
+  const [choosenTemplate, setChoosenTemplate] = useState<number | null>(currentTemplateId);
   const { openModal, ModalRenderer, closeModal: closeInnerModal } = useModal();
   const handleTemplateChange = () => {
     if (!choosenTemplate) return;
     onChangeTemplate?.(choosenTemplate);
+    closeModal();
   };
   return (
     <>
@@ -89,16 +91,19 @@ export function ChooseTemplate({
                   )
                 }
                 onKeyDown={(e) => {
-                  if (e.key === "Enter")
-                    <PreviewTemplate
-                      setCurrentTemplate={setChoosenTemplate}
-                      templateId={i}
-                      closeModal={closeInnerModal}
-                    />;
+                  if (e.key === "Enter") {
+                    openModal(
+                      <PreviewTemplate
+                        setCurrentTemplate={setChoosenTemplate}
+                        templateId={i}
+                        closeModal={closeInnerModal}
+                      />
+                    );
+                  }
                 }}
               >
-                {i === currentTemplateId && (
-                  <div className="absolute top-0 left-0 w-full h-full bg-primary/50 rounded-lg"></div>
+                {i == choosenTemplate && (
+                  <div className="bg-blue-600 text-white text-xs px-2 py-1 rounded">Selected</div>
                 )}
                 <div className="relative text-center text-gray-500 group">
                   <Image
@@ -122,10 +127,7 @@ export function ChooseTemplate({
           <div className="flex items-center justify-start w-full max-w-7xl p-4">
             <button
               className="cursor-pointer hover:bg-primary/70 text-white bg-primary rounded-sm p-4"
-              onClick={() => {
-                handleTemplateChange();
-                closeModal();
-              }}
+              onClick={handleTemplateChange}
               type="button"
             >
               Confirm Choosen Template

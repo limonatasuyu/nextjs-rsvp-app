@@ -1,5 +1,5 @@
 import { auth } from "@/../auth";
-import { getRSVPPagesByUser, deleteRSVPPage } from "@/lib/db/rsvp-logic";
+import { getRSVPPagesByUser, deleteRSVPPage, updateRSVPPage } from "@/lib/db/rsvp-logic";
 import { getUserByEmail } from "@/lib/db/user-logic";
 
 export async function DELETE(request: Request) {
@@ -64,6 +64,39 @@ export async function GET() {
   }
 
   return new Response(JSON.stringify(data), {
+    status: 200,
+  });
+}
+
+export async function PUT(request: Request) {
+  const session = await auth();
+  if (!session || !session.user || !session.user.email) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+    });
+  }
+
+  const body = await request.json();
+  const user = await getUserByEmail(session.user.email);
+
+  if (!user) {
+    return new Response(JSON.stringify({ error: "Something went wrong" }), {
+      status: 404,
+    });
+  }
+
+  const userId = user.id;
+  const dto = { ...body, userId };
+
+  const updatedPage = await updateRSVPPage(dto);
+
+  if (!updatedPage) {
+    return new Response(JSON.stringify({ error: "Something went wrong" }), {
+      status: 500,
+    });
+  }
+
+  return new Response(JSON.stringify({ message: "RSVP page updated successfully" }), {
     status: 200,
   });
 }

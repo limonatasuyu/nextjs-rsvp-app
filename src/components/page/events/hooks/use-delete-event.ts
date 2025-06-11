@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useCallback } from "react";
 
-export function useDeleteEvent({ token }: { token: string }) {
+export function useDeleteEvent({ token, onDelete }: { token: string, onDelete?: () => void }) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const deleteEvent = useCallback(() => {
     setLoading(true);
     const makeRequest = async () => {
-      const response = await fetch("/api/rsvp/pages", {
+      const response = await fetch("/api/event", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -21,6 +21,7 @@ export function useDeleteEvent({ token }: { token: string }) {
         setError("Something went wrong");
         return;
       }
+      onDelete?.();
     };
     makeRequest();
   }, [token]);

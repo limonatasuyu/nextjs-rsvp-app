@@ -7,6 +7,44 @@ import {
 import { PutCommand, GetCommand, QueryCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "../db";
 
+export async function updateRSVPPage(dto: ICreateRSVPDTO) {
+  const existingPage = await getRSVPPageByTokenWithUserId({ token: dto.token });
+  if (!existingPage) {
+    throw new Error("Page not found");
+  }
+  if (existingPage.userId !== dto.userId) {
+    throw new Error("Unauthorized");
+  }
+  const params = {
+    TableName: "rsvp-pages",
+    Item: {
+      token: dto.token,
+      userId: dto.userId,
+      eventTitle: dto.eventTitle,
+      eventDescription: dto.eventDescription,
+      collectMaybeData: dto.collectMaybeData,
+      collectNotComingData: dto.collectNotComingData,
+      ageRestricted: dto.ageRestricted,
+      minimumAgeRequirement: dto.minimumAgeRequirement.toString() ?? "0",
+      showAttendingCount: dto.showAttendingCount,
+      showAttendees: dto.showAttendees,
+      collectNote: dto.collectNote,
+      templateId: dto.templateId.toString(),
+    },
+  };
+  try {
+    const command = new PutCommand(params);
+    const response = await ddb.send(command);
+    if (response.$metadata.httpStatusCode !== 200) {
+      throw new Error("Failed to update RSVP page");
+    }
+    return { token: dto.token };
+  } catch (error) {
+    console.error("Error updating RSVP page:", JSON.stringify(error));
+    throw error;
+  }
+}
+
 export async function deleteRSVPPage(dto: IDeleteRSVPPageDTO) {
   const page = await getRSVPPageByTokenWithUserId({ token: dto.token });
   if (!page) {
