@@ -25,3 +25,25 @@ export interface IDeleteRSVPPageDTO {
   userId: string;
   token: string;
 }
+
+export interface ISaveAttendeeByTokenDTO {
+  eventToken: string;
+  preference: "yes" | "maybe" | "not-coming";
+  note?: string;
+  title: string;
+  name: string;
+  email: string;
+  tel: string;
+  age?: number;
+  comment?: string;
+}
+
+export interface IGetAttendeesByEventTokenDTO {
+  eventToken: string;
+}
+
+export interface IDeleteAttendeeByTokenDTO {
+  userId: string;
+  token: string;
+  attendeeId: string;
+}

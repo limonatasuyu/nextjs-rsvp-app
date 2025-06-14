@@ -44,7 +44,10 @@ export function EventsTable({
     );
   };
   const handleView = (row: EventData) => {
-    openModal(<ViewEventModal eventData={row} />, "View Event Details");
+    openModal(
+      <ViewEventModal eventData={row} closeModal={closeModal} refetchData={refetchData} />,
+      "View Event Details"
+    );
   };
   const handleDelete = (row: EventData) => {
     openModal(
@@ -68,17 +71,17 @@ export function EventsTable({
         <tbody className="text-sm text-gray-800">
           {data.map((row, rowIndex) => (
             <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-              <td className="px-4 py-2 border-b">{row.eventTitle}</td>
-              <td className="px-4 py-2 border-b">{row.eventDescription}</td>
-              <td className="px-4 py-2 border-b">{row.ageRestricted ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{row.minimumAgeRequirement}</td>
-              <td className="px-4 py-2 border-b">{row.showAttendingCount ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{row.collectNotComingData ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{row.showAttendees ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{row.collectMaybeData ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{row.collectNote ? "Yes" : "No"}</td>
-              <td className="px-4 py-2 border-b">{row.attendeeCount ?? 0}</td>
-              <td className="px-4 py-2 border-b flex justify-start gap-2">
+              <td className="px-4 py-2">{row.eventTitle}</td>
+              <td className="px-4 py-2">{row.eventDescription}</td>
+              <td className="px-4 py-2">{row.ageRestricted ? "Yes" : "No"}</td>
+              <td className="px-4 py-2">{row.minimumAgeRequirement}</td>
+              <td className="px-4 py-2">{row.showAttendingCount ? "Yes" : "No"}</td>
+              <td className="px-4 py-2">{row.collectNotComingData ? "Yes" : "No"}</td>
+              <td className="px-4 py-2">{row.showAttendees ? "Yes" : "No"}</td>
+              <td className="px-4 py-2">{row.collectMaybeData ? "Yes" : "No"}</td>
+              <td className="px-4 py-2">{row.collectNote ? "Yes" : "No"}</td>
+              <td className="px-4 py-2">{row.attendeeCount ?? 0}</td>
+              <td className="px-4 py-2 flex justify-start gap-2">
                 <button
                   onClick={() => handleEdit(row)}
                   className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded"

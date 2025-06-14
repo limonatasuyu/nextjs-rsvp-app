@@ -119,7 +119,6 @@ export function ChooseTemplate({
                 </div>
                 <div className="text-center">
                   <h2 className="text-lg font-bold">Template {i + 1}</h2>
-                  <p className="text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 </div>
               </div>
             ))}

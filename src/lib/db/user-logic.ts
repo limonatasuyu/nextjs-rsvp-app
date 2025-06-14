@@ -12,8 +12,6 @@ export async function getUserByEmail(email: string) {
     },
   };
 
-  console.log("getParams:", JSON.stringify(getParams));
-
   try {
     const result = await ddb.send(new QueryCommand(getParams));
     return result?.Items?.[0];

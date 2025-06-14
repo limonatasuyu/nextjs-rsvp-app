@@ -9,12 +9,28 @@ const templates = [
   { id: "8", name: "Template 8", image: "/themes/screenshots/template-8.png" },
 ];
 
-export const modalFields = [
+export const editEventModalFields = [
   { key: "eventTitle", name: "Event Title", type: "text" },
   { key: "eventDescription", name: "Event Description", type: "textarea" },
   { key: "token", name: "Page Link", type: "text" },
   { key: "minimumAgeRequirement", name: "Minimum Age Requirement", type: "number" },
   { key: "templateId", name: "Template", type: "select", options: templates },
+  { key: "showAttendingCount", name: "Show Attending Count", type: "switch" },
+  { key: "showAttendees", name: "Show Attendees", type: "switch" },
+  { key: "notComing", name: "Not Coming", type: "switch" },
+  { key: "ageRestricted", name: "Age Restricted", type: "switch" },
+  { key: "collectNote", name: "Collect Note", type: "switch" },
+  { key: "collectMaybeData", name: "Collect Maybe Coming", type: "switch" },
+  { key: "collectNotComingData", name: "Collect Not Coming", type: "switch" },
+];
+
+export const viewEventModalFields = [
+  { key: "eventTitle", name: "Event Title", type: "text" },
+  { key: "eventDescription", name: "Event Description", type: "textarea" },
+  { key: "token", name: "Page Link", type: "text" },
+  { key: "minimumAgeRequirement", name: "Minimum Age Requirement", type: "number" },
+  { key: "templateId", name: "Template", type: "select", options: templates },
+  { key: "attendees", name: "Attendees", type: "text" },
   { key: "showAttendingCount", name: "Show Attending Count", type: "switch" },
   { key: "showAttendees", name: "Show Attendees", type: "switch" },
   { key: "notComing", name: "Not Coming", type: "switch" },

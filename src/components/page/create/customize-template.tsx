@@ -36,7 +36,7 @@ export function CustomizeTemplate() {
   });
 
   const searchParams = useSearchParams();
-  const templateId = Number(searchParams.get("templateId"));
+  const templateId = Number(searchParams.get("template"));
 
   const { addMultipleQueryParameters } = useQueryString();
   const [formDataErrors, setFormDataErrors] = useState<IFormDataErrors>({});

@@ -1,5 +1,5 @@
 import { EventData } from "../types";
-import { modalFields } from "../mock";
+import { editEventModalFields } from "../mock";
 import { Switch } from "@/components/ui/switch";
 import { useModal } from "@/hooks/use-modal";
 import Image from "next/image";
@@ -21,7 +21,6 @@ export function EditEventModal({
 }) {
   const [formData, setFormData] = useState<EventData>(eventData);
   const { openModal, ModalRenderer, closeModal: closeInnerModal } = useModal();
-  console.log("formData", formData);
   const changeFormData = (key: string, value: string | number | boolean) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
@@ -180,7 +179,7 @@ export function EditEventModal({
       <ModalRenderer />
       <div className="p-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {modalFields.map((field) => (
+          {editEventModalFields.map((field) => (
             <div key={field.key} className="flex flex-col">
               <label htmlFor={field.key} className="text-sm font-medium text-gray-700 mb-1">
                 {field.name}

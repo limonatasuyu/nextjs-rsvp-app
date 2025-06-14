@@ -1,33 +1,29 @@
 import { EventData } from "@/components/page/events/types";
+import { useToast } from "@/contexts/toast-context";
 import { useCallback, useEffect, useState } from "react";
 
-function isStringTrue(value: string): boolean {
-  return value?.toLowerCase?.() === "true";
-}
 export function useEvents() {
   const [events, setEvents] = useState<EventData[]>([]);
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
 
   const fetchPages = useCallback(async () => {
-    const response = await fetch("/api/event");
-    const data = await response.json();
-    if (!data) return;
-    const formattedData: EventData[] = data.map((item: any) => ({
-      showAttendingCount: isStringTrue(item.showAttendingCount),
-      token: item.token,
-      eventDescription: item.eventDescription,
-      collectNotComingData: isStringTrue(item.collectNotComingData),
-      showAttendees: isStringTrue(item.showAttendees),
-      templateId: item.templateId,
-      collectMaybeData: isStringTrue(item.collectMaybeData),
-      minimumAgeRequirement: item.minimumAgeRequirement,
-      eventTitle: item.eventTitle,
-      collectNote: isStringTrue(item.collectNote),
-      ageRestricted: isStringTrue(item.ageRestricted),
-      attendeeCount: item.attendeeCount ?? 0,
-    }));
-    setEvents(formattedData);
-    setLoading(false);
+    const response = await fetch("/api/events");
+    try {
+      const data = await response.json();
+      if (!data) return;
+      const formattedData: EventData[] = data.map((item: EventData) => ({
+        ...item,
+        attendeeCount: item.attendees?.length ?? 0,
+        attendees: item.attendees ?? [],
+      }));
+      setEvents(formattedData);
+      setLoading(false);
+      showToast("Events fetched successfully", "success");
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      showToast("Failed to fetch events", "error");
+    }
   }, []);
 
   useEffect(() => {

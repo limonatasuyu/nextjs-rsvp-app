@@ -1,9 +1,11 @@
 import { useCallback, useState } from "react";
 import { EventData } from "../types";
+import { useToast } from "@/contexts/toast-context";
 
 export function useUpdateEvent({ refetch }: { refetch: () => void }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const updateEvent = useCallback((eventData: EventData) => {
     const makeRequest = async () => {
@@ -22,10 +24,12 @@ export function useUpdateEvent({ refetch }: { refetch: () => void }) {
         setLoading(false);
         setError(null);
         refetch();
+        showToast("Event data updated successfully", "success");
         return data;
       } catch (error) {
-        setError("Failed to change event data");
-        console.error("Error changing event data:", error);
+        setLoading(false);
+        setError(error instanceof Error ? error.message : "An unexpected error occurred");
+        showToast(error instanceof Error ? error.message : "An unexpected error occurred", "error");
         throw error;
       }
     };

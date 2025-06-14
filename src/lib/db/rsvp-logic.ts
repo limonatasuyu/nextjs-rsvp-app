@@ -3,9 +3,117 @@ import {
   IGetRSVPPageByTokenDTO,
   IGetRSVPPagesByUserDTO,
   IDeleteRSVPPageDTO,
+  ISaveAttendeeByTokenDTO,
+  IGetAttendeesByEventTokenDTO,
+  IDeleteAttendeeByTokenDTO,
 } from "../dto/rsvp.dto";
-import { PutCommand, GetCommand, QueryCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, GetCommand, QueryCommand, DeleteCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "../db";
+import { v4 as uuidv4 } from "uuid";
+
+
+export async function deleteAttendeeByToken(dto: IDeleteAttendeeByTokenDTO) {
+  const page = await getRSVPPageByTokenWithUserId({ token: dto.token });
+
+  if (!page) {
+    throw new Error("Page not found");
+  }
+
+  if (page.userId !== dto.userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const updatedAttendees = (page.attendees || []).filter(
+    (attendee: { id: string }) => attendee.id !== dto.attendeeId
+  );
+
+  if (updatedAttendees.length === page.attendees.length) {
+    throw new Error("Attendee not found");
+  }
+
+  const params = {
+    TableName: "rsvp-pages",
+    Key: { token: dto.token },
+    UpdateExpression: "SET attendees = :attendees",
+    ExpressionAttributeValues: {
+      ":attendees": updatedAttendees,
+    },
+  };
+
+  try {
+    const response = await ddb.send(new UpdateCommand(params));
+
+    if (response.$metadata.httpStatusCode !== 200) {
+      throw new Error("Failed to delete attendee");
+    }
+
+    return { success: true, error: "" };
+  } catch (error) {
+    console.error("Error deleting attendee:", error);
+    throw new Error("Internal error while deleting attendee");
+  }
+}
+
+export async function getAttendeesByEventToken(dto: IGetAttendeesByEventTokenDTO) {
+  const params = {
+    TableName: "rsvp-pages",
+    Key: {
+      token: dto.eventToken,
+    },
+    ProjectionExpression: "attendees, showAttendees",
+  };
+  try {
+    const data = await ddb.send(new GetCommand(params));
+    if (!data.Item) {
+      return null;
+    }
+    if (!data.Item.showAttendees) {
+      throw new Error("Attendees are not visible for this event");
+    }
+    return data.Item.attendees || [];
+  } catch (error) {
+    console.error("Error fetching attendees:", JSON.stringify(error));
+    throw error;
+  }
+}
+
+export async function saveAttendeeByToken(dto: ISaveAttendeeByTokenDTO) {
+  const newAttendee = {
+    id: uuidv4(),
+    preference: dto.preference,
+    note: dto.note,
+    title: dto.title,
+    name: dto.name,
+    email: dto.email,
+    tel: dto.tel,
+    age: dto.age ? dto.age.toString() : undefined,
+    comment: dto.comment,
+  };
+
+  const params = {
+    TableName: "rsvp-pages",
+    Key: {
+      token: dto.eventToken,
+    },
+    UpdateExpression: "SET attendees = list_append(if_not_exists(attendees, :empty), :new)",
+    ExpressionAttributeValues: {
+      ":new": [newAttendee],
+      ":empty": [],
+    },
+  };
+
+  try {
+    const command = new UpdateCommand(params);
+    const response = await ddb.send(command);
+    if (response.$metadata.httpStatusCode !== 200) {
+      throw new Error("Failed to save attendee");
+    }
+    return { success: true, error: "" };
+  } catch (error) {
+    console.error("Error saving attendee:", JSON.stringify(error));
+    throw error;
+  }
+}
 
 export async function updateRSVPPage(dto: ICreateRSVPDTO) {
   const existingPage = await getRSVPPageByTokenWithUserId({ token: dto.token });
@@ -151,6 +259,7 @@ export async function createRSVPPage(dto: ICreateRSVPDTO) {
       showAttendees: dto.showAttendees,
       collectNote: dto.collectNote,
       templateId: dto.templateId.toString(),
+      attendees: [],
     },
   };
 

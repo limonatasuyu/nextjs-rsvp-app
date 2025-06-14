@@ -37,17 +37,9 @@ export function useModal() {
     return ReactDOM.createPortal(
       <div
         style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
           backgroundColor: "rgba(0, 0, 0, 0.5)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000,
         }}
+        className="fixed inset-0 flex items-center justify-center z-40"
         onClick={closeModal}
       >
         <div

@@ -1,4 +1,16 @@
+export type Attendee = {
+  email: string;
+  id: string;
+  name: string;
+  note: string;
+  preference: "yes" | "maybe" | "not-coming";
+  age?: string;
+  tel: string;
+  title: string;
+};
+
 export type EventData = {
+  attendees: Attendee[];
   showAttendingCount: string;
   token: string;
   eventDescription: string;

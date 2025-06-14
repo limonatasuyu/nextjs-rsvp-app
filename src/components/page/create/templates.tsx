@@ -5,7 +5,7 @@ import { useQueryString } from "@/hooks/use-query-string";
 
 export function Templates() {
   const [currentTemplate, setCurrentTemplate] = useState<number | null>(null);
-  const { addQueryParameter } = useQueryString();
+  const { addMultipleQueryParameters } = useQueryString();
 
   return (
     <>
@@ -33,7 +33,6 @@ export function Templates() {
             </div>
             <div className="text-center">
               <h2 className="text-lg font-bold">Template {i}</h2>
-              <p className="text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
             </div>
           </div>
         ))}
@@ -59,8 +58,10 @@ export function Templates() {
               <button
                 className="cursor-pointer hover:bg-primary/70 text-white bg-primary rounded-sm p-4"
                 onClick={() => {
-                  addQueryParameter("templateId", String(currentTemplate));
-                  addQueryParameter("currentStep", "2");
+                  addMultipleQueryParameters([
+                    { name: "template", value: currentTemplate.toString() },
+                    { name: "currentStep", value: "2" },
+                  ]);
                   setCurrentTemplate(null);
                 }}
                 type="button"

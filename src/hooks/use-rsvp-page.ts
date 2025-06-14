@@ -9,7 +9,7 @@ export function useRSVPPage({ token }: { token: string | null }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/events?token=${token}`);
+        const response = await fetch(`/api/event?token=${token}`);
         const data = await response.json();
         setData(data);
       } catch (error) {

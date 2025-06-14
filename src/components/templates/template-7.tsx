@@ -1,14 +1,9 @@
-import React, { useState } from "react";
 import { EventData } from "../page/events/types";
+import { AttendeeInfoForm } from "./attendee-info-form";
+import { useUserResponse } from "./use-user-response";
 
 export default function Template({ data }: { data: EventData }) {
-  const [note, setNote] = useState("");
-
-  const handleSubmit = (response: string) => {
-    alert(`Response: ${response}\nMessage: ${note}`);
-    console.log("Response:", response);
-    console.log("Message:", note);
-  };
+  const { response, handleSubmit, message, setMessage } = useUserResponse();
 
   return (
     <div
@@ -23,39 +18,51 @@ export default function Template({ data }: { data: EventData }) {
       <div className="bg-black/70 backdrop-blur-lg shadow-2xl rounded-3xl p-10 max-w-xl w-full border-4 border-yellow-400">
         <h1 className="text-5xl font-extrabold text-yellow-400 drop-shadow-md mb-4">{data.eventTitle}</h1>
         {data.eventDescription && <p className="text-xl text-gray-300 mb-8">{data.eventDescription}</p>}
-        <div className="flex flex-col gap-4">
-          <button
-            className="py-3 bg-yellow-400 hover:bg-yellow-500 text-black text-lg font-bold rounded-xl uppercase tracking-wide transition"
-            onClick={() => handleSubmit("We the best ✅")}
-          >
-            We the best ✅
-          </button>
-          {data.collectMaybeData && (
-            <button
-              className="py-3 bg-pink-500 hover:bg-pink-600 text-white text-lg font-bold rounded-xl uppercase tracking-wide transition"
-              onClick={() => handleSubmit("Might pull up 🤔")}
-            >
-              Might pull up 🤔
-            </button>
-          )}
-          {data.collectNotComingData && (
-            <button
-              className="py-3 bg-red-600 hover:bg-red-700 text-white text-lg font-bold rounded-xl uppercase tracking-wide transition"
-              onClick={() => handleSubmit("Not this time ❌")}
-            >
-              Not this time ❌
-            </button>
-          )}
-        </div>
-
-        {data.collectNote && (
-          <input
-            type="text"
-            placeholder="Say something legendary..."
-            className="mt-6 w-full px-4 py-3 text-black border border-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-300"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
+        {response ? (
+          <AttendeeInfoForm
+            preference={response}
+            eventToken={data.token}
+            ageRestricted={data.ageRestricted}
+            minimumAgeRequirement={data.minimumAgeRequirement}
+            showAttendees={data.showAttendees}
           />
+        ) : (
+          <>
+            <div className="flex flex-col gap-4">
+              <button
+                className="py-3 bg-yellow-400 hover:bg-yellow-500 text-black text-lg font-bold rounded-xl uppercase tracking-wide transition"
+                onClick={() => handleSubmit("yes")}
+              >
+                We the best ✅
+              </button>
+              {data.collectMaybeData && (
+                <button
+                  className="py-3 bg-pink-500 hover:bg-pink-600 text-white text-lg font-bold rounded-xl uppercase tracking-wide transition"
+                  onClick={() => handleSubmit("maybe")}
+                >
+                  Might pull up 🤔
+                </button>
+              )}
+              {data.collectNotComingData && (
+                <button
+                  className="py-3 bg-red-600 hover:bg-red-700 text-white text-lg font-bold rounded-xl uppercase tracking-wide transition"
+                  onClick={() => handleSubmit("not-coming")}
+                >
+                  Not this time ❌
+                </button>
+              )}
+            </div>
+
+            {data.collectNote && (
+              <input
+                type="text"
+                placeholder="Say something legendary..."
+                className="mt-6 w-full px-4 py-3 text-black border border-gray-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+            )}
+          </>
         )}
       </div>
     </div>

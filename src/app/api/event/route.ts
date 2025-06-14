@@ -1,5 +1,5 @@
 import { auth } from "@/../auth";
-import { getRSVPPagesByUser, deleteRSVPPage, updateRSVPPage } from "@/lib/db/rsvp-logic";
+import { deleteRSVPPage, updateRSVPPage, getRSVPPageByToken } from "@/lib/db/rsvp-logic";
 import { getUserByEmail } from "@/lib/db/user-logic";
 
 export async function DELETE(request: Request) {
@@ -31,43 +31,26 @@ export async function DELETE(request: Request) {
     status: 200,
   });
 }
-
-export async function GET() {
-  const session = await auth();
-  if (!session || !session.user || !session.user.email) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const token = searchParams.get("token");
+  if (!token) {
+    return new Response(JSON.stringify({ error: "Invalid token" }), {
+      status: 400,
     });
   }
 
-  const user = await getUserByEmail(session.user.email);
-
-  if (!user) {
-    return new Response(JSON.stringify({ error: "Something went wrong" }), {
-      status: 404,
-    });
-  }
-  const userId = user.id;
-
-  if (!userId) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-    });
-  }
-
-  const dto = { userId };
-  const data = await getRSVPPagesByUser(dto);
+  const dto = { token };
+  const data = await getRSVPPageByToken(dto);
   if (!data) {
-    return new Response(JSON.stringify({ error: "Something went wrong" }), {
-      status: 404,
+    return new Response(JSON.stringify({ error: "Invalid token" }), {
+      status: 400,
     });
   }
-
   return new Response(JSON.stringify(data), {
     status: 200,
   });
 }
-
 export async function PUT(request: Request) {
   const session = await auth();
   if (!session || !session.user || !session.user.email) {

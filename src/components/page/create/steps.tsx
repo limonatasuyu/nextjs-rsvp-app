@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export function Steps({currentStep = 1}: {currentStep?: number}) {
+export function Steps({ currentStep = 1 }: { currentStep?: number }) {
   const steps = [
     {
       title: "Choose a template",
@@ -12,11 +12,6 @@ export function Steps({currentStep = 1}: {currentStep?: number}) {
       description: "Customize your RSVP page",
       icon: "/icons/customize.svg",
     },
-    //{
-    //  title: "Settings",
-    //  description: "Manage your RSVP page",
-    //  icon: "/icons/settings.svg",
-    //},
     {
       title: "Share",
       description: "Share your RSVP page",
@@ -32,7 +27,6 @@ export function Steps({currentStep = 1}: {currentStep?: number}) {
               <div className="w-10 h-10 rounded-full flex items-center justify-center border border-[3px] mt-2 text-center text-lg">
                 <Image src={step.icon} alt={step.title} width={24} height={24} />
               </div>
-
               <h2 className="text-2xl font-bold">{step.title}</h2>
               <p className="text-gray-500">{step.description}</p>
             </div>
