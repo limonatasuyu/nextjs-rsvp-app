@@ -3,7 +3,7 @@ import { viewEventModalFields } from "../mock";
 import { Switch } from "@/components/ui/switch";
 import { useModal } from "@/hooks/use-modal";
 import Image from "next/image";
-import { TemplatePreview } from "../edit-event/template-preview";
+import { PreviewTemplate } from "@/components/layout/preview-template";
 import { useCallback } from "react";
 import { ViewAttendeesModal } from "./view-attendees-modal";
 
@@ -104,7 +104,7 @@ export function ViewEventModal({
               alt={field.name}
               className="cursor-pointer w-90 h-auto rounded-lg"
               onClick={() =>
-                openModal(<TemplatePreview templateId={value as string} closeModal={closeInnerModal} />)
+                openModal(<PreviewTemplate templateId={value as number} closeModal={closeInnerModal} />)
               }
             />
           </div>

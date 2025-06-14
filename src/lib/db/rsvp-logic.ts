@@ -159,7 +159,6 @@ export async function deleteRSVPPage(dto: IDeleteRSVPPageDTO) {
     throw new Error("Page not found");
   }
 
-  console.log("page: ", page);
   console.log("dto.userId: ", dto.userId);
 
   if (page.userId !== dto.userId) {

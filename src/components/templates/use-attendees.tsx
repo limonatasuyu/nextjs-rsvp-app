@@ -32,6 +32,5 @@ export function useAttendees({ eventToken }: { eventToken: string }) {
 
     fetchAttendees();
   }, [eventToken]);
-  console.log("Attendees fetched:", attendees);
   return { attendees, loading, error };
 }

@@ -8,7 +8,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col gap-6 p-6 bg-gray-100 h-screen w-64 shadow-md">
+    <div className="flex flex-col gap-6 p-6 bg-gray-100 h-auto min-h-screen w-64 shadow-md">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Menu</h2>
       <ul className="flex flex-col gap-3">
         <li>

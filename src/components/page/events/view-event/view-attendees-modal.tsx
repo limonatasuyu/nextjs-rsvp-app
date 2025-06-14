@@ -24,7 +24,6 @@ export function ViewAttendeesModal({
   });
 
   const handleDeleteAttendee = (attendeeId: string) => {
-    console.log("Deleting attendee with ID:", attendeeId);
     openModal(
       <div className="p-4">
         <h2 className="text-xl font-bold mb-4">Delete Attendee</h2>

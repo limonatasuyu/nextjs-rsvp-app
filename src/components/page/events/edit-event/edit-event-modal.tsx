@@ -3,7 +3,7 @@ import { editEventModalFields } from "../mock";
 import { Switch } from "@/components/ui/switch";
 import { useModal } from "@/hooks/use-modal";
 import Image from "next/image";
-import { TemplatePreview } from "./template-preview";
+import { PreviewTemplate } from "@/components/layout/preview-template";
 import { ChooseTemplate } from "./choose-template";
 import { useCallback, useState } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -93,7 +93,7 @@ export function EditEventModal({
               alt={field.name}
               className="cursor-pointer w-90 h-auto rounded-lg"
               onClick={() =>
-                openModal(<TemplatePreview templateId={value as string} closeModal={closeInnerModal} />)
+                openModal(<PreviewTemplate templateId={value as number} closeModal={closeInnerModal} />)
               }
             />
             <button

@@ -8,7 +8,6 @@ import { Suspense } from "react";
 
 export function CreatePage() {
   const searchParams = useSearchParams();
-
   const gettedStep = searchParams.get("currentStep");
   const currentStep = gettedStep ? Number(gettedStep) : 1;
   return (
