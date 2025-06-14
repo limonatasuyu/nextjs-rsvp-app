@@ -24,11 +24,11 @@ export function useEvents() {
       console.error("Error fetching events:", error);
       showToast("Failed to fetch events", "error");
     }
-  }, []);
+  }, [showToast]);
 
   useEffect(() => {
     fetchPages();
-  }, []);
+  }, [fetchPages]);
 
   return { events, loading, refetch: fetchPages };
 }

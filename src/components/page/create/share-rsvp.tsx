@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -7,7 +7,7 @@ export function ShareRSVP() {
   const searchParams = useSearchParams();
   const templateId = Number(searchParams.get("templateId"));
 
-  async function getToken() {
+  const getToken = useCallback(async () => {
     const data: { [key: string]: string } = {};
     for (const [key, value] of searchParams.entries()) {
       data[key] = value;
@@ -24,7 +24,7 @@ export function ShareRSVP() {
     }
     const responseJson = await response.json();
     return responseJson.token;
-  }
+  }, [searchParams]);
 
   const [url, setUrl] = useState<string | null>(null);
 
@@ -36,7 +36,7 @@ export function ShareRSVP() {
       if (!token) return;
       setUrl(`${window.location.origin}/rsvp?&token=${token}`);
     })();
-  }, [templateId, url, setUrl]);
+  }, [templateId, url, setUrl, getToken]);
 
   if (!templateId && templateId !== 0) {
     return <div className="text-center text-red-500">No template selected.</div>;

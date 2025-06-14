@@ -1,6 +1,7 @@
 import { EventData } from "../page/events/types";
 import { AttendeeInfoForm } from "./attendee-info-form";
 import { useUserResponse } from "./use-user-response";
+import Image from "next/image";
 
 export default function Template({ data }: { data: EventData }) {
   const { response, handleSubmit, message, setMessage } = useUserResponse();
@@ -14,7 +15,9 @@ export default function Template({ data }: { data: EventData }) {
     >
       <div className="bg-white/90 shadow-2xl backdrop-blur-sm rounded-3xl p-8 max-w-md w-full text-center space-y-6">
         <div className="flex flex-col items-center">
-          <img
+          <Image
+            width={500}
+            height={200}
             src="/themes/images/banner.jpg"
             alt="Party Banner"
             className="rounded-2xl shadow-md w-full h-40 object-cover mb-4"

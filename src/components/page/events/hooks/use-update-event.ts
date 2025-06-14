@@ -36,7 +36,7 @@ export function useUpdateEvent({ refetch }: { refetch: () => void }) {
     setLoading(true);
     setError(null);
     return makeRequest();
-  }, []);
+  }, [refetch, showToast]);
 
   return { updateEvent, loading, error };
 }

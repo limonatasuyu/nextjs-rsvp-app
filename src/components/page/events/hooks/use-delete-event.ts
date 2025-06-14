@@ -35,7 +35,7 @@ export function useDeleteEvent({ token, onDelete }: { token: string; onDelete?: 
       }
     };
     makeRequest();
-  }, [token]);
+  }, [token, onDelete, showToast]);
 
   return { deleteEvent, error, loading };
 }

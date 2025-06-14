@@ -113,7 +113,7 @@ export function ViewEventModal({
 
       return null;
     },
-    [eventData, openModal, closeInnerModal]
+    [eventData, openModal, closeInnerModal, refetchData]
   );
 
   const handleCloseModal = () => {

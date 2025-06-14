@@ -25,7 +25,7 @@ export function LoginPage() {
     if (state.success) {
       window.location.href = redirectTo ? redirectTo as string : "/";
     }
-  }, [state]);
+  }, [state, searchParams]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">

@@ -36,7 +36,7 @@ export function useDeleteAttendee({ onDelete }: { onDelete?: () => void }) {
       };
       makeRequest();
     },
-    [onDelete]
+    [onDelete, showToast]
   );
 
   return { deleteAttendee, error, loading };

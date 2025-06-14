@@ -26,7 +26,7 @@ export function useQueryString() {
   const addMultipleQueryParameters = useCallback((parameters: { name: string; value: string }[]) => {
     const paramsString = parameters.map(({ name, value }) => `${name}=${value}`).join("&");
     router.push(`${pathname}?${paramsString}`);
-  }, []);
+  }, [pathname, router]);
 
   return {
     addQueryParameter,

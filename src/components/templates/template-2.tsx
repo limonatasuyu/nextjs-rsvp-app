@@ -1,6 +1,7 @@
 import { EventData } from "../page/events/types";
 import { AttendeeInfoForm } from "./attendee-info-form";
 import { useUserResponse } from "./use-user-response";
+import Image from "next/image";
 
 export default function Template({ data }: { data: EventData }) {
   const { response, handleSubmit, message, setMessage } = useUserResponse();
@@ -9,7 +10,8 @@ export default function Template({ data }: { data: EventData }) {
     <div className="bg-gradient-to-b from-blue-100 to-white text-gray-800 min-h-screen">
       {/* Header */}
       <header className="relative w-full h-[18rem] flex items-center justify-center overflow-hidden">
-        <img
+        <Image
+          fill
           src="/themes/images/banner.jpg"
           alt="Winter Banner"
           className="absolute w-full h-full object-cover brightness-75"
