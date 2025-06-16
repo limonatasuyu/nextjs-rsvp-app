@@ -1,6 +1,10 @@
-import { useAttendees } from "./use-attendees";
+import { useAttendees } from "./hooks/use-attendees";
 
-export function OtherAttendees({ eventToken }: { eventToken: string }) {
+type OtherAttendeesProps = {
+  eventToken: string;
+};
+
+export function OtherAttendees({ eventToken }: OtherAttendeesProps) {
   const { attendees, loading, error } = useAttendees({ eventToken });
   return (
     <div>

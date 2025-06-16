@@ -2,18 +2,15 @@
 
 import { useRSVPPage } from "@/hooks/use-rsvp-page";
 import { useSearchParams } from "next/navigation";
-import Template1 from "@/components/templates/template-1";
-import Template2 from "@/components/templates/template-2";
-import Template3 from "@/components/templates/template-3";
-import Template4 from "@/components/templates/template-4";
-import Template5 from "@/components/templates/template-5";
-import Template6 from "@/components/templates/template-6";
-import Template7 from "@/components/templates/template-7";
-import Template8 from "@/components/templates/template-8";
-import { EventData } from "../events/types";
-import { JSX } from "react";
-
-type TemplateType = ({ data }: { data: EventData }) => JSX.Element;
+import Template1 from "@/components/page/rsvp/templates/template-1";
+import Template2 from "@/components/page/rsvp/templates/template-2";
+import Template3 from "@/components/page/rsvp/templates/template-3";
+import Template4 from "@/components/page/rsvp/templates/template-4";
+import Template5 from "@/components/page/rsvp/templates/template-5";
+import Template6 from "@/components/page/rsvp/templates/template-6";
+import Template7 from "@/components/page/rsvp/templates/template-7";
+import Template8 from "@/components/page/rsvp/templates/template-8";
+import { TemplateType } from "@/components/page/rsvp/types";
 
 export function RSVPPage() {
   const searchParams = useSearchParams();

@@ -1,8 +1,8 @@
-import { EventData } from "../page/events/types";
-import { AttendeeInfoForm } from "./attendee-info-form";
-import { useUserResponse } from "./use-user-response";
+import { AttendeeInfoForm } from "../attendee-info-form";
+import { useUserResponse } from "../hooks/use-user-response";
+import { TemplateProps } from "../types";
 
-export default function Template({ data }: { data: EventData }) {
+export default function Template({ data }: TemplateProps) {
   const { response, handleSubmit, message, setMessage } = useUserResponse();
 
   return (

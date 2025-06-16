@@ -1,18 +1,7 @@
 import { useActionState } from "react";
 import { saveAttendee } from "@/actions/save-attendee";
-import { LoadingSpinner } from "../ui/loading-spinner";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { OtherAttendees } from "./other-attendees";
-
-export interface IAttendee {
-  eventToken: string;
-  preference: "yes" | "maybe" | "not-coming";
-  title: string;
-  name: string;
-  email: string;
-  tel: string;
-  note?: string;
-  age?: number;
-}
 
 const titles = [
   "Mr.",
@@ -49,6 +38,15 @@ const initialState = {
   success: false,
 };
 
+type AttendeeFormProps = {
+  preference: "yes" | "maybe" | "not-coming";
+  eventToken: string;
+  note?: string;
+  ageRestricted: boolean;
+  minimumAgeRequirement?: number;
+  showAttendees: boolean;
+};
+
 export function AttendeeInfoForm({
   preference,
   eventToken,
@@ -56,14 +54,7 @@ export function AttendeeInfoForm({
   ageRestricted,
   minimumAgeRequirement,
   showAttendees,
-}: {
-  preference: "yes" | "maybe" | "not-coming";
-  eventToken: string;
-  note?: string;
-  ageRestricted: boolean;
-  minimumAgeRequirement?: number;
-  showAttendees: boolean;
-}) {
+}: AttendeeFormProps) {
   const [state, formAction, isPending] = useActionState(saveAttendee, initialState);
   if (state.success) {
     return (

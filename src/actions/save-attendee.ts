@@ -1,6 +1,6 @@
 "use server";
 
-import { IAttendee } from "@/components/templates/attendee-info-form";
+import { IAttendee } from "@/components/page/rsvp/types";
 import { saveAttendeeByToken } from "@/lib/db/rsvp-logic";
 
 export async function saveAttendee(prevState: { error: string; success: boolean }, formData: FormData) {
