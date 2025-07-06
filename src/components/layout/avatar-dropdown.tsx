@@ -47,10 +47,11 @@ function Avatar() {
   );
 }
 
-
 export function LogoutButton() {
-  const [state, formAction, isPending] = useActionState(signOutAction, null);
-  console.log("state: ", state);
+  // State is unused but required as the first tuple item from useActionState
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, formAction, isPending] = useActionState(signOutAction, null);
+
   return (
     <form action={formAction}>
       <button

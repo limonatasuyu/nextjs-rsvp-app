@@ -22,6 +22,8 @@ export default function Template({ data }: TemplateProps) {
             ageRestricted={data.ageRestricted}
             minimumAgeRequirement={data.minimumAgeRequirement}
             showAttendees={data.showAttendees}
+            showAttendingCount={data.showAttendingCount}
+            attendeeCount={data.attendeeCount}
           />
         ) : (
           <div className="bg-white shadow-xl rounded-3xl p-8 max-w-md w-full text-center">

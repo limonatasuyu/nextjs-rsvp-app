@@ -45,6 +45,8 @@ type AttendeeFormProps = {
   ageRestricted: boolean;
   minimumAgeRequirement?: number;
   showAttendees: boolean;
+  showAttendingCount?: boolean;
+  attendeeCount?: number;
 };
 
 export function AttendeeInfoForm({
@@ -54,6 +56,8 @@ export function AttendeeInfoForm({
   ageRestricted,
   minimumAgeRequirement,
   showAttendees,
+  showAttendingCount,
+  attendeeCount,
 }: AttendeeFormProps) {
   const [state, formAction, isPending] = useActionState(saveAttendee, initialState);
   if (state.success) {
@@ -65,6 +69,7 @@ export function AttendeeInfoForm({
         >
           <span className="block sm:inline">Your response has been saved.</span>
         </div>
+        {showAttendingCount && <p className="mt-4">{attendeeCount} people coming to this event</p>}
         {showAttendees && <OtherAttendees eventToken={eventToken} />}
       </div>
     );

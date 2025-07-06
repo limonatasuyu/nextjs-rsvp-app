@@ -11,7 +11,7 @@ export function CustomizeTemplate() {
   const { formData, handleChange, submitForm, formDataErrors } = useCustomizeTemplateForm({
     templateId,
   });
-  console.log("formData.collectNote: ", formData.collectNote);
+
   return (
     <div className="container mx-auto mt-16 flex items-center justify-between px-12 pb-12">
       <div className="w-full">

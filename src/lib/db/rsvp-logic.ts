@@ -11,7 +11,6 @@ import { PutCommand, GetCommand, QueryCommand, DeleteCommand, UpdateCommand } fr
 import { ddb } from "../db";
 import { v4 as uuidv4 } from "uuid";
 
-
 export async function deleteAttendeeByToken(dto: IDeleteAttendeeByTokenDTO) {
   const page = await getRSVPPageByTokenWithUserId({ token: dto.token });
 
@@ -159,8 +158,6 @@ export async function deleteRSVPPage(dto: IDeleteRSVPPageDTO) {
     throw new Error("Page not found");
   }
 
-  console.log("dto.userId: ", dto.userId);
-
   if (page.userId !== dto.userId) {
     throw new Error("Unauthorized");
   }
@@ -235,7 +232,12 @@ export async function getRSVPPageByToken(dto: IGetRSVPPageByTokenDTO) {
     if (!Item.Item) {
       return null;
     }
-    return { ...Item.Item, userId: undefined };
+    return {
+      ...Item.Item,
+      userId: undefined,
+      attendees: Item.Item.showAttendees ? Item.Item.attendees : undefined,
+      attendeeCount: Item.Item.showAttendingCount ? Item.Item.attendees.length : 0,
+    };
   } catch (error) {
     console.error("Error fetching RSVP page:", JSON.stringify(error));
     throw error;

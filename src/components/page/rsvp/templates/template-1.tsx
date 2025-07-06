@@ -34,6 +34,8 @@ export default function Template({ data }: TemplateProps) {
             ageRestricted={data.ageRestricted}
             minimumAgeRequirement={data.minimumAgeRequirement}
             showAttendees={data.showAttendees}
+            showAttendingCount={data.showAttendingCount}
+            attendeeCount={data.attendeeCount}
           />
         ) : (
           <div className="flex flex-col gap-4 bg-white shadow-xl rounded-2xl p-6 max-w-md w-full">

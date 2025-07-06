@@ -25,6 +25,8 @@ export default function Template({ data }: TemplateProps) {
             ageRestricted={data.ageRestricted}
             minimumAgeRequirement={data.minimumAgeRequirement}
             showAttendees={data.showAttendees}
+            showAttendingCount={data.showAttendingCount}
+            attendeeCount={data.attendeeCount}
           />
         ) : (
           <>

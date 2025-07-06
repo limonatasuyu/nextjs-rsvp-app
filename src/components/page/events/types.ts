@@ -11,7 +11,7 @@ export type Attendee = {
 
 export type EventData = {
   attendees: Attendee[];
-  showAttendingCount: string;
+  showAttendingCount?: boolean;
   token: string;
   eventDescription: string;
   collectNotComingData: boolean;
